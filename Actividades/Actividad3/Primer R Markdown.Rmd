@@ -1,0 +1,81 @@
+---
+title: "Primer R Markdown"
+author: "Ivan Arriola"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Ejercicio 1
+1. Crear una carpeta en el disco T en la carpeta stat_nt que se llame Rmarkdown, si no tienen disco T
+o U hagan la carpeta en el escritorio.
+2. Crear un proyecto de RStudio en la carpeta Rmarkdown, el nombre del proyecto también debe ser
+RMarkdown
+3. Abrir un archivo de Rmarkdown que compile a pdf.
+4. En YAML metadata:
+• Título del documento: Primer R Markdown
+• Autor: Nombre y apellido
+5. Compilar (render) y ver que el documento sale bien en pdf
+
+# Ejercicio 2
+
+1. Incluir una sección que se llame “Incluir imagen”
+2. Seleccionen una imagen que les guste de internet y guardarla en la carpeta donde está el proyecto.
+3. Inluí la imagen en la sección con una linea de texto de porqué le gusta la imagen
+
+
+# Incluir Imagen
+
+## Ada Lovelace
+
+![Ada Lovelace](Ada-Lovelace.jpg) 
+
+Me gusta esta foto porque es un retrato de la primera programadora de la historia
+
+# Ejercicio 3
+Ahora incluir una nueva sección que se llame “Chunck con código de R”
+1. Incluir un chunk con código en R que haga el gráfico siguiente: Con los datos mpg que se encuentran
+disponible en ggplot2 hacer un scatterplot de hwy vs cty
+2. La figura tiene que tener 5 de alto y 5 de ancho.
+3. Cuando compile el archivo asegurate que salga el código de R.
+
+
+# Chunck con código de R"
+
+```{r}
+library(ggplot2)
+data(mpg)
+
+ggplot(data=mpg, aes(x=cty, y=hwy)) + 
+  geom_point() +
+  labs(x="En Ciudad",
+       y="En Autopista",
+       title="Eficiencia de combustible en millas por galon",
+       subtitle="Relacion entre eficiencia de combustible en ciudad y carretera",
+       caption="Linea roja punteada representa la igualdad en eficiencia") + 
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") 
+
+```
+
+# Ejercicio 4
+Ahora incluir una nueva sección que se llame “Inluir una tabla”
+1. Con los datos de mpg seleccione las filas 1:5 y las columnas de 1:5 y haga una tabla usando xtable
+2. Cuando compile el archivo asegurate que salga el código de R
+
+# Inluir una tabla
+
+```{r}
+library(xtable)
+
+mpg_xt <- xtable(mpg[1:5, 1:5])
+
+mpg_xt
+
+
+```
+
