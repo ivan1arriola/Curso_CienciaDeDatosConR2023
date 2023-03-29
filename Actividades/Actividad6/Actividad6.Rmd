@@ -1,0 +1,46 @@
+---
+title: "Actividad 6"
+author: "Ivan Arriola"
+date: "2023-03-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicio 1
+Con los datos mpg que se encuentran disponible en **ggplot2** hacer un gráfico con las siguientes características:
+- Un diagrama de dispersión de hwy vs cty
+- Incluir usando labs el nombre de los ejes, título informativo y nombre de la leyenda
+Usar ?mpg para ver la descripción de las variables.
+
+```{r}
+library(ggplot2)
+data(mpg)
+
+head(mpg)
+ggplot(data = mpg, aes(x=hwy, y=cty)) + geom_point() +           theme(aspect.ratio = 1) +
+  labs(x="Carretera", y="Ciudad", 
+       title = "Galones por milla segun")
+
+```
+
+## Ejercicio 2
+En el gráfico anterior hay un problema de sobre ploteo, esto es hay más de una observación en algunas
+combinaciones de cty y hwy.
+1. Hacer el gráfico anterior y usá transparencia (alpha) para ver el problema de sobre ploteo.
+```{r}
+
+```
+
+2. Hacer el gráfico anterior y usá geom_jitter() para atacar el problema de sobre ploteo.
+```{r}
+
+```
+3. ¿Qué opción te resulta más apropiada y porqué ?
+```{r}
+
+```
+
+
