@@ -1,0 +1,276 @@
+---
+title: "Tarea 1"
+subtitle: "Ciencia de Datos con R"
+author: "Ivan Arriola 55366796"
+date: "Entrega 12/4 23:59 PM"
+output: 
+  pdf_document:
+    number_sections: false
+    extra_dependencies:
+      bbm: null
+      amsthm: null
+      amsmath: null
+      babel: ["spanish"]
+editor_options:
+  chunk_output_type: console
+---
+
+La fecha para entregar la Tarea 1 es el 12 de Abril a las 23:59 PM. La tarea es individual por lo que cada uno tiene que escribir su propia versión de la misma aunque se incentiva la consulta de dudas con estudiantes del curso así como en foros de EVA.
+
+La tarea debe ser realizada en RMarkdown disponible en tu repositorio de GitHub 
+(generado en la Actividad 5) donde van a ir poniendo todas las tareas y actividades del curso en diferentes carpetas y cada uno con su correspondiente proyecto de RStudio. 
+
+En el **YAML** del .Rmd incluí tu nombre y CI (cambiar donde dice author: "Alumno").
+
+**MUY IMPORTANTE** Cuando generen el proyecto de RStudio siempre revisar que están utilizando la codificación de texto UTF-8 (text encoding UTF8).
+Para ello, debes ir a: 
+
+**Tools -> Project Options -> Code Editing -> Text encoding seleccionar UTF-8**.
+
+El repositorio de GitHub para esta tarea debe contener el únicamente archivo .Rmd con la solución de la tarea 1 (en  la carpeta correspondiente). 
+
+Para que podamos ver sus tareas y corregir las mismas nos tienen que hacer colaboradores de su repositorio de GitHub a Mauro (mauroloprete) y a Natalia (natydasilva).
+
+Utilicen el archivo .Rmd de esta tarea como base para la solución, incorporando debajo de la pregunta su respuesta.
+Comienzá con los ejercicios más sencillos y intentá ser ordenado/a, enumerá los ejercicios y **utilizá un archivo .Rmd el cual debe compilar a .pdf mostrando el código (chunks), o sea echo = TRUE**.
+
+Verán que tal vez algunos ejercicios tienen alguna dificultad adicional que las actividades, se espera que revisando el material sugerido en el curso y leyendo la ayuda en R deberían ser capaces de resolver los problemas. Si las preguntas no son suficientemente claras, pregunten en el foro de EVA. Si las dudas no son de comprensión de la letra se aconseja primero **buscar por su cuenta inicialmente** ya que es parte del aprendizaje.
+
+Si un ejercicio no lo pudiste realizar pero intentaste diferentes formas **no** dejes en blanco el ejercicio, mantené el código junto al razonamiento que utilizaste.
+
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\E}{\bs{\mathcal{E}}}
+\newcommand{\F}{\bs{\mathcal{F}}}
+\renewcommand{\v}{\bs{v}}
+\renewcommand{\bfdefault}{m} <!-- Para que no salgan en negrita los headers -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,
+    eval = TRUE,
+    include = TRUE,
+    warning = FALSE,
+    message = FALSE,
+    tidy.opts = list(width.cutoff = 60), 
+    tidy = 'styler',
+    strip.white=TRUE
+)
+```
+
+
+\newpage
+
+# Ejercicio 1: Vectores
+
+### 1. Dado los siguientes vectores, indicá a qué tipo de vector coercionan.
+
+```{r}
+
+w <- c(29, 1L, "22020202", "1")
+cat("Cooerciona a", typeof(w))
+
+m <- c("22+3", 33, NA)
+cat("Cooerciona a", typeof(m))
+
+y <- c(seq(3:25), 10L)
+cat("Cooerciona a", typeof(y))
+
+z <- paste(seq(3:25), 10L)
+cat("Cooerciona a", typeof(z))
+
+```
+
+### 2. Almacená los vectores de la parte 1 en una lista.
+
+```{r}
+lista <- list(w, m, y, z)
+```
+
+
+### 3. Creá una función que intente obtener el total del vector. En el caso que no pueda cohercionar a vector númerico, la función debe de contar la cantidad de elementos diferentes y de un mensaje de advertencia.
+
+
+
+### 4. Evalua la función anterior en cada elemento de la lista llamando una única vez la función creada en la sección anterior.
+
+Pudes usar un `for loop` pero en este caso probá hacerlo de una forma alternativa con la familia de funciones `apply`
+
+
+### 5. ¿Cuál es la diferencia entre `c(4, 3, 2, 1)` y `4:1`?
+
+\newpage
+
+# Ejercicio 2: Factores
+
+
+### 1. Describa brevemente la utilidad de trabajar con factores y los posibles inconvenientes vistos en clase.
+
+Dado el siguiente `factor` `x`:
+
+```{r}
+x <-
+   factor(
+      c(
+         "a lto",
+         " b a j o ",
+         "med i          o",
+         "alt o",
+         "muy alto",
+         "bajo",
+         "medio",
+         "alto",
+         "ALTO ",
+         "  MEDIO",
+         "BAJO  ",
+         "MUY_ ALTO ",
+         "muy muy muy alto",
+         "no se que contestar",
+         "Alto",
+         "Ni idea",
+         " muy alto ",
+         "alto, creo",
+         "Bajo ",
+         "_______M ______",
+         "GU    AU    ",
+         "GOL",
+         "MUY BAJO!!!",
+         "MUY BAJO                         ",
+         "MuY AlTo",
+         "Me parece que alto",
+         "demasiado bajo"
+      )
+   )
+```
+
+### 2. Generá un nuevo `factor` (llamalo `xx`) transformando el objeto `x`:
+
+Debes de seguir los siguientes pasos: 
+
+- Conviertan todos los valores a minúsculas mediante una función de R, NO lo hagan a mano.
+- Borren "muy" para que "bajo" y "muy bajo" sean iguales, pueden existir espacios, **hay que removerlos**.
+- Todo lo que no sea "bajo", "medio", "alto" debe ser excluido.
+- Las etiquetas deben ser : B bajo, M medio y A alto.
+- Recuerden (como vieron en las actividades) que pueden usar _labels_. 
+
+El ejercicio tiene dos respuestas, una refleja un nivel básico-medio de manipulación de cadenas de texto y el otro un nivel medio-avanzado. El nivel básico-medio implica no poder extraer los niveles de `'Me parece que alto'`, `'demasiado bajo'` y `'alto,creo'`, 
+el siguiente nivel implica poder extraer los niveles `alto`, `bajo` y `alto` respectivamente. 
+
+Si querés pasar de un nivel a otro podes buscar sobre regex ^[Visitá https://regex101.com/], la función `base::regexpr` y `base::regmatches`.
+
+**Pistas**: 
+
+- Para el nivel básico-medio se obtiene la siguiente tabla de frecuencias:
+    - alto: 10
+    - medio: 3
+    - bajo: 6
+- Para el nivel avanzado, se le agregan al nivel alto dos cantidades y al bajo una observación.
+- Se deben corregir (y tomar en cuenta) todos los casos que contengan las palabras: bajo, medio, alto. Es decir, "MUY ALTO", "ALTO" deben transformarse a "alto" y así sucesivamente.
+
+### 3. Generá el siguiente `data.frame()`
+
+\newpage
+
+# Ejercicio 3: Listas
+
+### 1. Generá una lista que se llame `lista_t1` que contenga:
+
+- Un vector numérico de longitud 4 (`h`).
+- Una matriz de dimensión 4*3 (`u`).
+- La palabra "chau" (`palabra`).
+- Una secuencia diaria de fechas (clase Date) desde 2021/01/01 hasta 2021/12/30 (`fecha`).
+
+
+### 2. ¿Cuál es el tercer elemento de la primera fila de la matriz `u`? ¿Qué columna lo contiene?
+
+
+### 3. ¿Cuál es la diferencia entre hacer `lista_t1[[2]][] <- 0` y `lista_t1[[2]] <- 0`?
+
+# Ejercicio 4: Matrices
+
+### 1. Generá una matriz $A$ de dimensión $4*3$ y una matriz $B$ de dimensión $4*2$ con números aleatorios usando alguna función predefinda en R.
+
+
+### 2. Calculá el producto elemento a elemento de la primera columna de la matriz $A$ por la última columna de la matriz $B$.
+
+
+### 3. Calculá el producto matricial entre $D = A^TB$. Luego seleccioná los elementos de la primer y tercera fila de la segunda columna (en un paso).
+
+### 4. Usá las matrices $A$ y $B$ de forma tal de lograr una matriz $C$ de dimensión $4*5$. Con la función `attributes` inspeccioná los atributos de C. Posteriormente renombrá filas y columnas como "fila_1", "fila_2"..."columna_1", "columna_2", vuelvé a inspeccionar los atributos. Finalmente, generalizá y escribí una función que reciba como argumento una matriz y devuelva como resultado la misma matriz con columnas y filas con nombres.
+
+### 5. **Puntos Extra**: genelarizá la función para que funcione con arrays de forma que renombre filas, columnas y matrices.
+
+\newpage
+
+
+# Ejercicio 5: Estructuras de control y funciones vectrorizadas
+
+### 1. ¿Qué hace la función `ifelse()` del paquete `base` de R?
+
+### 2. Dado el vector $x$ tal que: `x <- c(8, 6, 22, 1, 0, -2, -45)`, utilizando la función `ifelse()` del paquete `base`, reemplazá todos los elementos mayores estrictos a `0` por `1`, y todos los elementos menores o iguales a `0` por `0`.
+
+### 3. ¿Por qué no fué necesario usar un loop ?
+
+### 4. ¿Qué es un while loop y cómo es la estructura para generar uno en R? ¿En qué se diferencia de un for loop?
+
+### 5. Dada la estructura siguiente:
+
+```{r}
+x <- c(1,2,3)
+suma <- 0
+i <- 1
+while(i < 6){
+ suma = suma + x[i]      
+ i <- i + 1     
+}
+```
+
+### 6. Modificá la estructura anterior para que `suma` valga 0 si el vector tiene largo menor a 5, o que sume los primeros 5 elementos si el vector tiene largo mayor a 5. A partir de ella generá una fución que se llame `sumar_si` y verificá que funcione utilizando los vectores `y <- c(1:3)`, `z <- c(1:15)`.
+
+### 7. Intentá escribir en función de forma vectorizada.
+
+Probá que la función devuelva el mismo resultado usando `all.equal`.
+
+
+# Ejercicio 6: Ordenar
+
+### 1. Generá una función `ordenar_x()`que para cualquier vector numérico, ordene sus elementos de menor a mayor. Por ejemplo:
+
+Sea `x <- c(3,4,5,-2,1)`, `ordenar_x(x)` devuelve `c(-2,1,3,4,5)`.
+
+Para controlar, generá dos vectores numéricos cualquiera y pasalos como argumentos en `ordenar_x()`. 
+
+Observación: Si usa la función `base::order()` entonces debe escribir 2 funciones. Una usando `base::order()` y otra sin usarla.
+
+### 2. ¿Qué devuelve `order(order(x))`?
+
+\newpage
+
+# Ejercicio 7: Argumentos de funciones
+
+### - ¿Qué función del paquete base es la que tiene mayor cantidad de argumentos? 
+
+**Pistas**: Posible solución:
+
+0. Argumentos = `formals()`
+1. Para comenzar use `ls("package:base")` y luego revise la función `get()` y `mget()` (use esta última, necesita modificar un parámetro ó formals).
+2. Revise la funcion Filter
+3. Itere
+4. Obtenga el índice del valor máximo
+
+
+# Ejercicio 8: Factores
+
+Dado el siguiente `factor`
+
+```{r}
+f1 <- factor(letters)
+```
+
+### - ¿Qué hace el siguiente código? Explicá las diferencias o semejanzas.
+
+```{r}
+levels(f1) <- rev(levels(f1))
+f2 <- rev(factor(letters))
+f3 <- factor(letters, levels = rev(letters)) 
+```

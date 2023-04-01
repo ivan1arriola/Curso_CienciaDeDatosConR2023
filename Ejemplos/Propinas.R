@@ -1,5 +1,7 @@
-library(tidyverse)
+if (!require("tidyverse")) install.packages("tidyverse")
 propinas <- read_csv("./Datos/propina.csv")
+
+
 head(propinas)
 
 
@@ -52,3 +54,4 @@ ggplot(data = propinas, aes(x = total, y = propina) ) +
   labs(x = "Total de la cuenta en dólares"
        , y = "Propina en dólares") +
   facet_grid( sexo~fuma)
+
