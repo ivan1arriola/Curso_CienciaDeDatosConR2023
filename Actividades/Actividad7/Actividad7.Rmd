@@ -1,0 +1,58 @@
+---
+title: "Actividad 7"
+author: "Ivan Arriola"
+date: "2023-04-12"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r,message=FALSE}
+library(ggplot2)
+library(readr)
+library(paletteer)
+library(forcats)
+propinas <- read_csv("../../Datos/propina.csv")
+```
+
+# Ejercicio 1
+Hacer un gráfico de dispersión: componentes estéticos x total, y propina, color cantidad
+
+```{r}
+text <- element_text(size = 12, color = "darkgray")
+
+
+grafico1 <- ggplot(data=propinas, aes(x=total, y=propina, color=cantidad)) + geom_point() +
+  scale_x_continuous(name = "Total gastado en dólares") +
+  scale_y_continuous(name = "Propina en dólares") +
+  scale_color_continuous(name= "Personas") +
+  theme(
+    axis.title = text,
+    legend.title = text,
+    legend.text = text
+    ) +
+  scale_colour_paletteer_c("scico::tokyo", direction = -1)
+
+grafico1
+
+```
+# Ejercicio 2
+
+```{r}
+grafico1 + geom_smooth(color="black") 
+
+```
+# Ejercicio 3
+
+```{r}
+
+ggplot(data=propinas, aes(x=fct_infreq(dia))) + geom_bar(aes(fill=dia) ) + 
+  coord_flip() + 
+  coord_flip()
+```
+
+
+

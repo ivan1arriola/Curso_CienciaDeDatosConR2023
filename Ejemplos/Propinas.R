@@ -28,7 +28,7 @@ ggplot(data = propinas, aes( x= total, y = propina, size=cantidad)) +
 # grafico / cantidad size alpha
 ggplot(data = propinas, aes( x= total, y = propina, size=cantidad)) +
   geom_point(alpha = 1/3) +
-  theme(aspect.ratio = 1)
+  theme(aspect.ratio = 1) 
 
 # grafico / azul fijo
 ggplot(data = propinas, aes( x= total, y = propina)) +
