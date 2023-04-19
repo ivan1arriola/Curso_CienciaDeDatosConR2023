@@ -50,8 +50,7 @@ grafico1 + geom_smooth(color="black")
 ```{r}
 
 ggplot(data=propinas, aes(x=fct_infreq(dia))) + geom_bar(aes(fill=dia) ) + 
-  coord_flip() + 
-  coord_flip()
+  coord_flip() 
 ```
 
 

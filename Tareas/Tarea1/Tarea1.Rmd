@@ -3,8 +3,6 @@ title: "Tarea 1"
 author: "Ivan Arriola 55366796"
 date: "Entrega 12/4 23:59 PM"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     number_sections: no
     extra_dependencies:
@@ -12,6 +10,8 @@ output:
       amsthm: null
       amsmath: null
       babel: spanish
+  html_document:
+    df_print: paged
 subtitle: Ciencia de Datos con R
 editor_options:
   chunk_output_type: console
