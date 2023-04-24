@@ -10,6 +10,8 @@ output:
       amsthm: null
       amsmath: null
       babel: spanish
+  html_document:
+    df_print: paged
 subtitle: Ciencia de Datos con R
 editor_options:
   chunk_output_type: console
