@@ -3,8 +3,6 @@ title: "Tarea 1"
 author: "Ivan Arriola 55366796"
 date: "Entrega 12/4 23:59 PM"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     number_sections: no
     extra_dependencies:
@@ -111,6 +109,11 @@ total <- function(x){
 ```
 
 
+\fbox{\begin{minipage}{48em}
+
+El return podría ser la cantidad de elementos diferentes. Mira la solución, ahí se incluye también el uso de `tryCatch`.
+\end{minipage}}
+
 
 ### 4. Evalua la función anterior en cada elemento de la lista llamando una única vez la función creada en la sección anterior.
 
@@ -130,6 +133,28 @@ c(4, 3, 2, 1)
 Crean exactamente el mismo vector. Las formas de crearlo son distintas, en el primero se explicito
 cada uno de los elementos, mientras que el segundo se creo como una secuencia que va de 4 a 1 , con
 pasos de -1
+
+
+\fbox{\begin{minipage}{48em}
+
+Son distintos vectores, fijate como se almacena.
+
+\end{minipage}}
+
+```{r}
+class(
+  c(4,3,2,1)
+)
+
+class(4:1)
+```
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 1:}
+
+Sin más comentarios 17/20.
+\end{minipage}}
 
 \newpage
 
@@ -221,6 +246,10 @@ xx <- factor(x, levels = x_levels , labels = x_labels)
 
 ```
 
+\fbox{\begin{minipage}{48em}
+
+Podrías hacerlo en menos pasos, utilizaste funciones vectorizadas aprovechalas!. Te recomiendo mirar la solución y si bien los valores que no están incluidos en los niveles tienen `NA` había que removerlos podes probar con `na.omit` o utilizar el operador `%in%`. Además, te falto ordenar el factor.
+\end{minipage}}
 
 
 ### 3. Generá el siguiente `data.frame()`
@@ -233,6 +262,20 @@ df[c(2, 3),] <- df[c(3, 2),]
 df
 
 ```
+
+
+\fbox{\begin{minipage}{48em}
+
+Si bien el resultado es el mismo, el resultado salia directo si el factor estaba ordenado mirando el `data.frame` se puede ver que la segunda columna corresponde al órden. Proba convertir un factor ordenado a un vector numérico y reflexiona que ocurre, luego mira la solución.
+\end{minipage}}
+
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 2:}
+
+Sin más comentarios 18/20.
+\end{minipage}}
 
 \newpage
 
@@ -267,6 +310,13 @@ primera_fila[3] # esta en la tercera columna
 ### 3. ¿Cuál es la diferencia entre hacer `lista_t1[[2]][] <- 0` y `lista_t1[[2]] <- 0`?
 
 El primero reemplaza los valores de la matriz `lista_t1[[2]]`, el segundo reemplaza `lista_t1[[2]]` con 0
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 3:}
+
+Sin más comentarios 5/5.
+\end{minipage}}
 
 
 # Ejercicio 4: Matrices
@@ -316,6 +366,13 @@ D[c(1, 3), 2]
 
 ### 5. **Puntos Extra**: genelarizá la función para que funcione con arrays de forma que renombre filas, columnas y matrices.
 
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 4:}
+
+Sin más comentarios 10/10 + 0/5.
+\end{minipage}}
 
 \newpage
 
@@ -404,6 +461,56 @@ all.equal(sumar_si(z), sumar_si_vectorizado(z))
 ```
 
 
+\fbox{\begin{minipage}{48em}
+
+
+Para hacer la función vectorizada había que usar la función `ifelse`.
+\end{minipage}}
+
+Mirá este ejemplo muy sencillo:
+
+```{r,error = TRUE}
+test <- function(x) {
+  if (x > 0) {
+    100
+  } else {
+    - 100
+  }
+}
+
+test(-100:100)
+
+# Utilizar ifelse nos permite ver cuando las condiciones tiene largo mayor a 1.
+
+test_vec <- function(x) {
+  ifelse(
+    x > 0,
+    100,
+    -100
+  )
+}
+
+# O de otra manera
+
+test_vec2 <- function(x) {
+  100 * (x > 0) - 100 * (x <= 0)
+}
+
+all.equal(
+  test_vec(-100:100),
+  test_vec2(-100:100)
+)
+
+```
+
+
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 5:}
+
+Sin más comentarios 3.5/5.
+\end{minipage}}
 
 # Ejercicio 6: Ordenar
 
@@ -445,8 +552,15 @@ ordenar_x2(y)
 
 ### 2. ¿Qué devuelve `order(order(x))`?
 
-`order(order(x))` devuelve el lugar que ocuparia cada elemento de x si estuviera ordenado de menor a mayor
+`order(order(x))` devuelve el lugar que ocuparía cada elemento de x si estuviera ordenado de menor a mayor
 
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 6:}
+
+Sin más comentarios 10/10.
+\end{minipage}}
 
 
 \newpage
@@ -485,6 +599,19 @@ ordenar_x2(y)
 
 
 
+\fbox{\begin{minipage}{48em}
+
+Mira la solución para ver el uso de `Filter`.
+
+\end{minipage}}
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 7:}
+
+Sin más comentarios 20/20.
+\end{minipage}}
+
 # Ejercicio 8: Factores
 
 Dado el siguiente `factor`
@@ -505,3 +632,25 @@ El primero invierte el orden de los niveles del factor, no modifica el orden de 
 El segundo invierte el orden de los elementos del vector, no modifica el orden de los niveles del factor.
 El tercero invierte el orden de los niveles del factor y el orden de los elementos del vector.
 
+
+\fbox{\begin{minipage}{48em}
+
+El primero sí invierte el orden de los elementos del factor además de cambiar el orden de sus niveles. Tu respuesta sobre el segundo esta bien, mientras que el tercero mantiene el orden de los elementos factor y altera el orden de los niveles.
+
+
+\end{minipage}}
+
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 8:}
+
+Sin más comentarios 3/5.
+\end{minipage}}
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{¡Buen trabajo!}
+
+Por reproducibilidad tenes 5 puntos más, ¡en total la nota de la tarea es 91.5/100!.
+\end{minipage}}
