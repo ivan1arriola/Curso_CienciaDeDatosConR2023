@@ -1,0 +1,158 @@
+---
+title: "Tarea individual 2"
+author: "STAT NT"
+date: ""
+output:
+  pdf_document: default
+  fig_caption: yes
+editor_options:
+  chunk_output_type: console
+params:
+  show_answers: yes
+---
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = params[["show_answers"]],
+  include = params[["show_answers"]],
+  # echo = TRUE,
+  tidy.opts = list(width.cutoff = 50),
+  tidy = 'styler',
+  # tidy = TRUE,
+  fig.pos = 'h',
+  out.extra = '',
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r, echo=FALSE}
+library(ggplot2)
+library(gapminder)
+library(forcats)
+library(dplyr)
+library(magrittr)
+```
+
+
+## Entrega 
+
+Esta tarea tiene que estar disponible en su repositorio de GitHub en la carpeta Tareas . Asegurate que tanto Mauro como yo seamos colaboradoras de tu proyecto privado STAT_NT.
+Recordar seleccionar en en opciones de proyecto, codificación de texto UTF-8.
+La tarea debe ser realizada en RMarkdown, la tarea es individual por lo que cada uno tiene que escribir su propia versión de la misma.
+El repositorio debe contener el archivo .Rmd con la solución de la tarea y los archivos que sean necesarios para su reproducibilidad que se evaluará.
+
+Recordá que todas las Figuras deben ser autocontenidas, deben tener toda la información necesaria para que se entienda la información que se presenta. Todas las Figuras deben tener leyendas, títulos. El título (caption) debe contener el número de la Figura así como una breve explicación de la información en la misma. Adicionalmente en las Figuras los nombre de los ejes tienen que ser informativos.  En el YAML en Tarea_2.Rmd verás  `fig_caption: true` para que salgan los `caption` en el chunk de código debes incluir `fig.cap =` "Poner el que tipo de gráfico es y algún comentario interesante de lo que ves". Luego en el cuerpo del documento podés hacer comentarios  extendidos sobre lo que muestra la figura.
+
+
+
+
+## Ejercicio 1
+
+**Parte 1:**
+
+```{r}
+data(mpg)
+
+glimpse(mpg)
+```
+
+
+1. Con los datos `mpg` que se encuentran disponible en `ggplot2` hacer un gráfico de barras para la variables `drv` con las siguientes características:
+
+2. Las barras tienen que estar coloreadas por `drv`
+
+3. Incluir el nombre de los ejes y título informativo modificando el `scale` asociado, esto es sin usar `labs`.
+
+4. Seleccioná alguna paleta que sea apropiada para el problema. ¿Qué tipo de paleta hay que seleccionar para la variable `drv`?
+
+Tienen que tener un color apropiado para variables cualitativas. Elegi la paleta Dark2 porque da colores bien distinguibles entre si y no dan nocion de orden
+
+5. Recodificá la variable `drv` a `4x4`, `Delantera` y `trasera`.
+
+```{r}
+mpg <- mpg %>%
+  mutate(TipoTraccion = ifelse(drv == "f", "Delantera", 
+                      ifelse(drv == "r", "Trasera", "4x4")))
+```
+
+
+6. Eliminá los ticks del eje `x`.
+
+
+```{r}
+graficoBase <- mpg %>% ggplot(aes(TipoTraccion))
+(graficoEj1 <- graficoBase +
+  geom_bar(aes(fill= TipoTraccion)) +
+  ggtitle(label ="Distribución de vehículos según tipo de tracción")+
+  scale_x_discrete(name="Tipo de traccion del vehiculo") +
+  scale_y_continuous(name = "Cantidad de vehículos") +
+  scale_fill_brewer(palette = "Dark2") +
+  theme(axis.ticks.x = element_blank())
+)
+
+```
+
+
+
+**Parte 2:**
+En base al gráfico anterior
+
+7. Hacer el gráfico en porcentaje en vez de conteos
+
+8. Usando `scale_y_continuous()` cambiar la escala del eje `y` a porcentajes
+
+9. Usando `geom_text()` incluir texto con porcentajes arriba de cada barra
+
+
+```{r}
+(graficoEj2 <- graficoBase +
+  geom_bar(aes(y = prop.table(..count..), fill = TipoTraccion)) +
+  ggtitle(label ="Distribución de vehículos según tipo de tracción")+
+  scale_x_discrete(name="Tipo de tracción del vehículo") +
+  scale_y_continuous(name = "Porcentaje de vehículos", labels = scales::percent) +
+  scale_fill_brewer(palette = "Dark2") +
+  theme(axis.ticks.x = element_blank()) + 
+  geom_text(aes(y = prop.table(..count..), label = scales::percent(prop.table(..count..)) ), stat = "count",
+    vjust = -0.5
+  )
+)
+
+```
+
+
+\newpage
+
+## Ejercicio 2
+
+Vamos a utilizar la biblioteca `gapminder`, por lo que si no la usaste anteriormente tenés que instalarla y luego cargarla.
+Para obtener la descripción del paquete `library(help = "gapminder")` y para saber sobre la base `?gapminder`.
+
+```{r}
+data(gapminder)
+```
+
+
+1. Hacer un gráfico de caja de  `lifeExp` según continente.  Las etiquetas de los ejes deben ser claras y describir las variables involucradas (Esperanza de vida al nacer en años y Continente). Ordená las cajas usando el paquete `forcats` de menor a mayor valor en la mediana de `lifeExp`.  Incluir un `caption` en la figura con algún comentario de interés que describa el gráfico.
+Rotar los ejes para que en el eje `y` quede Continente.
+
+```{r}
+
+
+```
+
+
+2. Ahora agregale al gráfico anterior una capa con las observaciones individuales con una paleta apropiada para la variable `continente` (usando algún`sacale_<>_<>`), asignando un tamaño a los puntos de 2 y transparencia 0.3.
+Usando `theme`, poné la leyenda abajo y modificá el tamaño del título de la leyenda y el texto de la misma a tamaño 6. Adicionalmente reducí el tamaño de la caja `key` a 0.3 cm.
+
+3. Usando funciones de `dplyr` calculá la media de la variable `lifeExp` y guardala en un objeto  `world_avg `.
+Replicá el siguiente gráfico donde la linea vertical es `word_avg` los puntos grises son el valor medio de `lifeExp` para cada continente que deberás dibujarlo usando `stat_summary` con transparencia 0.6 y tamaño 2 para los puntos. Usar el `geom` apropiado para incorporar una variación aleatorea en los puntos  de 0.2.
+
+4. Agregar una capa de dato adicional para generar el lollipop plot usando `geom_segment()` para replicar el siguiente gráfico.
+
+5. Hacer un diagrama de dispersión con `lifeExpe` en el eje `y` y `gdpPercap` en el eje `x` para el año 2007
+Resaltando los paises que cumplen la condición que `gdpPercap > 5000 & lifeExp < 60` en rojo.  Escribir sus nombres usando `geom_text_repel` del paquete  `ggrepel` para evitar texto solapado tal que quede de la siguiente manera.
+
+6. Hacer un gráfico de lineas que tenga en el eje `x` `year` y en el eje `y`  `gdpPercap` para cada continente en una misma ventana gráfica. En cada continente, el gráfico debe contener una linea para cada país a lo largo del tiempo (serie de tiempo de `gdpPercap`). Las etiquetas de los ejes deben ser claras y describir las variables involucradas. Incluir un `caption` en la figura con algún comentario de interés que describa el gráfico.
+
+
+
