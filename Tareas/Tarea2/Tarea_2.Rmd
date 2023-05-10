@@ -78,10 +78,13 @@ mpg <- mpg %>%
 
 6. Eliminá los ticks del eje `x`.
 
-
 ```{r}
 graficoBase <- mpg %>% ggplot(aes(TipoTraccion))
+```
 
+
+
+```{r}
 (grafico1Parte1 <- graficoBase +
   geom_bar(aes(fill= TipoTraccion)) +
   ggtitle(label ="Distribución de vehículos según tipo de tracción")+
@@ -204,9 +207,9 @@ gapminder %>% ggplot(aes(x = lifeExp, y = fct_reorder(continent, lifeExp, median
 Resaltando los paises que cumplen la condición que `gdpPercap > 5000 & lifeExp < 60` en rojo.  Escribir sus nombres usando `geom_text_repel` del paquete  `ggrepel` para evitar texto solapado tal que quede de la siguiente manera.
 ```{r}
 library(ggrepel)
-(
+
 gapminder_2007 <- gapminder %>% filter(year==2007)
-)
+glimpse(gapminder_2007)
 ```
 
 
@@ -224,6 +227,7 @@ gapminder_2007 %>% ggplot(aes(y=lifeExp, x= gdpPercap, label = country)) +
     color = "red",
     data = subset(gapminder_2007, gdpPercap > 5000 & lifeExp < 60)
   ) +
+  ggtitle(label = "PIB per Capita de los paises en 2007") +
   scale_x_continuous(name="PBI per cápita") +
   scale_y_continuous(name="Esperanza de vida al nacer en años") +
   theme(legend.position = "none")
@@ -234,16 +238,21 @@ gapminder_2007 %>% ggplot(aes(y=lifeExp, x= gdpPercap, label = country)) +
 6. Hacer un gráfico de lineas que tenga en el eje `x` `year` y en el eje `y`  `gdpPercap` para cada continente en una misma ventana gráfica. En cada continente, el gráfico debe contener una linea para cada país a lo largo del tiempo (serie de tiempo de `gdpPercap`). Las etiquetas de los ejes deben ser claras y describir las variables involucradas. Incluir un `caption` en la figura con algún comentario de interés que describa el gráfico.
 
 ```{r}
+summary(gapminder[,"year"])
 
 (
   continent_data <- gapminder %>%
   group_by(continent, country) %>%
   arrange(year)
 )
+```
 
+
+```{r}
 ggplot(continent_data, aes(x = year, y = gdpPercap, color = country)) +
   geom_line() +
   facet_wrap(~continent, ncol = 3) +
+  ggtitle(label = "Variacion del PIB per Capita desde 1952 hasta 2007") +
   scale_x_continuous(name = "Año") +
   scale_y_log10(
     name = "PBI per cápita", 
