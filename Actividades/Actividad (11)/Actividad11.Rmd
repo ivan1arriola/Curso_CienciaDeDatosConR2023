@@ -1,0 +1,75 @@
+---
+title: "Actividad 11"
+output: pdf_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicio 1
+Usando los datos del paquete nycflights13 responde las siguientes preguntas:
+
+## 1. 
+
+Utilice flight2 como en clase que tiene un subconjunto de variables de flight como sigue
+```{r}
+library(nycflights13)
+library(magrittr)
+library(dplyr)
+
+data(flights)
+flights2 <- flights %>% select(year:day, hour, origin, dest, tailnum, carrier)
+```
+
+Usá left_joint para relacionar flight2 con weather
+sin especificar el parámetro by. 
+Qué variables usa para machear en flight2 y weather por defecto?
+
+```{r}
+data(weather)
+left_join(weather, flights2)
+```
+Utiliza todas las columnas que tienen en común
+(origin, year, month, day, hour)
+
+## 2. 
+
+En flight2 una clave primaria puede ser (year, month, day, hour, origin)?
+
+No, hay muchos vuelos que fueron el mismo año, mes, dia, hora y origen
+
+```{r}
+flights2 %>% count(year, month, day, hour, origin) %>% filter(n>1)
+```
+
+
+## 3. 
+
+Usando left_joint relacioná flight2 con airports usando la variable dest y faa respectivamente.
+
+```{r}
+data(airports)
+left_join(flights2,airports, c("dest"="faa") )
+```
+
+
+## 4. 
+
+Si quisieramos dibujar (aproximadamente) la ruta de cada avión vuela desde el origen al destino. ¿Qué variables necesitaríamos? ¿Qué tablas necesitamos combinar? ¿Pensá cuál es el conjunto de datos
+necesarios para obtener el siguiente dibujo de 100 vuelos, obtené los datos pero no hacer el dibujo?
+
+Necesitaria el origen y destino de cada vuelo y las coordenadas de cada origen y destino
+
+```{r}
+
+flights3 <- flights %>% select( origin, dest)
+head(flights3)
+
+airports2 <- airports %>% select(faa, lat, lon)
+head(airports2)
+
+left_join(flights3, airports2, c("origin" = "faa"))
+```
+
