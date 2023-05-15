@@ -61,6 +61,27 @@ Para cumplir esto debe de averiguar para cada función que desee utilizar el paq
 
 \newpage
 
+```{r}
+library(magrittr)
+clean_names <- function(df) {
+  
+  x = names(df)
+  
+  lower = tolower(x)
+
+  snake_case = gsub(
+    " ",
+    "_",
+    lower
+  )
+
+  names(df) <- snake_case
+
+  return(df)
+
+}
+```
+
 
 # Ejercicio 1: Otra vez datos de COVID
 
@@ -71,18 +92,18 @@ Para cumplir esto debe de averiguar para cada función que desee utilizar el paq
     Como puede ver existen diferentes formatos del mismo archivo, elija un formato en el cual se sienta cómoda para trabajar y guardelo en el directorio donde se encuentra trabajando en la tarea.
 
     **Nota**: El primer archivo es un archivo Excel, por algún error de la página no muestra el logo correspondiente.
-    
-```{r}
-library(readr)
-library(dplyr)
-```
 
 ```{r}
-vacunacion_data <- read_csv2("./actos_vacunales.csv")
-glimpse(vacunacion_data)
+vacunacion_data <- readr::read_csv2("./actos_vacunales.csv")
+vacunacion_data <- clean_names(vacunacion_data)
+
+dplyr::glimpse(vacunacion_data)
 ```
 
 2. Resuma el archivo descargado (incluyendo **TODAS** las variables) agregando por:
+
+(Transformar el resumen por dia a uno por mes y por anio)
+(usar lubridate)
 
     - Año
     - Mes/Año
@@ -92,25 +113,25 @@ glimpse(vacunacion_data)
     **Pista**: Puede ayudarse de la siguiente formula:
 
     $$ aniomes = anio*100 + mes$$
-    
+
 ```{r Crear variables Anio y AnioMes}
-vacunacion_data <- vacunacion_data %>% mutate(
-  FechaDate = as.Date(Fecha, "%d/%m/%Y"),
-  Anio = as.numeric(format(FechaDate, '%Y')),
-  AnioMes = Anio *100 + as.numeric(format(FechaDate, '%m'))
-) %>% select(Anio,AnioMes , everything())
+vacunacion_data <- vacunacion_data %>% dplyr::mutate(
+  FechaDate = lubridate::dmy(Fecha),
+  Anio = lubridate::year(FechaDate),
+  AnioMes = Anio *100 + lubridate::month(FechaDate)
+) %>% dplyr::select(Anio,AnioMes , everything())
 ```
 
 ```{r}
-# Resumen de variables numéricas por año
+# Promedio diario por anio
 vacunacion_data %>% 
-  group_by(Anio) %>% 
-  summarise_if(is.numeric, sum)
+  dplyr::group_by(Anio) %>% 
+  dplyr::summarise_if(is.numeric, sum) #tengo que sumar todo lo del anio
 
-# Resumen de variables numéricas por año/mes
+# Promedio diario por mes y anio
 vacunacion_data %>% 
-  group_by(AnioMes) %>% 
-  summarise_if(is.numeric, sum)
+  dplyr::group_by(AnioMes) %>% 
+  dplyr::summarise_if(is.numeric, sum) # y todo lo del mes anio
 
 ```
 
@@ -122,14 +143,18 @@ vacunacion_data %>%
     encontrar un patrón que le permita elegir las columnas de interés de forma resumida.
     
 ```{r}
-vacunasPorLaboratorio_data <- vacunacion_data %>% select(ends_with('Sinovac'), ends_with('Pfizer'), ends_with('Astrazeneca'))
+(
+  vacunasPorLaboratorio_data <- vacunacion_data %>% select(ends_with('Sinovac'), ends_with('Pfizer'), ends_with('Astrazeneca'))
+ )
 ```
     
 
 4. Obtenga el total de cada columna seleccionada.
 
 ```{r}
-vacunasPorLaboratorio_data %>% summarise_all(sum)
+(
+  vacunasPorLaboratorio_data %>% summarise_all(sum)
+)
 
 ```
 

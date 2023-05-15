@@ -52,10 +52,8 @@ Recordá que todas las Figuras deben ser autocontenidas, deben tener toda la inf
 
 ```{r}
 data(mpg)
-
 glimpse(mpg)
 ```
-
 
 1. Con los datos `mpg` que se encuentran disponible en `ggplot2` hacer un gráfico de barras para la variables `drv` con las siguientes características:
 
@@ -84,10 +82,9 @@ graficoBase <- mpg %>% ggplot(aes(TipoTraccion))
 
 
 
-```{r}
+```{r, fig.cap="Distribución de vehículos según tipo de tracción"}
 (grafico1Parte1 <- graficoBase +
   geom_bar(aes(fill= TipoTraccion)) +
-  ggtitle(label ="Distribución de vehículos según tipo de tracción")+
   scale_x_discrete(name="Tipo de traccion del vehiculo") +
   scale_y_continuous(name = "Cantidad de vehículos") +
   scale_fill_brewer(palette = "Dark2") +
@@ -108,17 +105,20 @@ En base al gráfico anterior
 9. Usando `geom_text()` incluir texto con porcentajes arriba de cada barra
 
 
-```{r}
+```{r, fig.cap="Distribución de vehículos según tipo de tracción"}
 (grafico1Parte2 <- graficoBase +
-  geom_bar(aes(y = prop.table(..count..), fill = TipoTraccion)) +
-  ggtitle(label ="Distribución de vehículos según tipo de tracción")+
+  geom_bar(aes(y = prop.table(after_stat(count)), fill = TipoTraccion)) +
   scale_x_discrete(name="Tipo de tracción del vehículo") +
   scale_y_continuous(name = "Porcentaje de vehículos", labels = scales::percent) +
   scale_fill_brewer(palette = "Dark2") +
   theme(axis.ticks.x = element_blank()) + 
-  geom_text(aes(y = prop.table(..count..), label = scales::percent(prop.table(..count..)) ), stat = "count",
-    vjust = -0.5
-  )
+  geom_text(
+    aes(
+      y = prop.table(after_stat(count)), 
+      label = scales::percent(prop.table(after_stat(count))) ),
+      stat = "count",
+      vjust = -0.5
+    )
 )
 
 ```
@@ -140,14 +140,15 @@ glimpse(gapminder)
 1. Hacer un gráfico de caja de  `lifeExp` según continente.  Las etiquetas de los ejes deben ser claras y describir las variables involucradas (Esperanza de vida al nacer en años y Continente). Ordená las cajas usando el paquete `forcats` de menor a mayor valor en la mediana de `lifeExp`.  Incluir un `caption` en la figura con algún comentario de interés que describa el gráfico.
 Rotar los ejes para que en el eje `y` quede Continente.
 
-```{r}
+```{r, fig.cap="Esperanza de vida por Continente"}
 ( Grafico2Parte1 <- gapminder %>% 
     ggplot(aes(x=fct_reorder(continent, lifeExp, median), y=lifeExp,)) +
     geom_boxplot() +
-    ggtitle("Esperanza de vida por Continente") +
     scale_x_discrete(name = "Continente") +
     scale_y_continuous(name = "Esperanza de vida al nacer en años") +
-    labs(caption = "Fuente: Datos de Gapminder") +
+    labs(caption = 
+           "Se puede observar una diferencia considerable de Africa del resto de los continentes"
+         ) +
     coord_flip()
 )
 
@@ -157,10 +158,15 @@ Rotar los ejes para que en el eje `y` quede Continente.
 2. Ahora agregale al gráfico anterior una capa con las observaciones individuales con una paleta apropiada para la variable `continente` (usando algún`sacale_<>_<>`), asignando un tamaño a los puntos de 2 y transparencia 0.3.
 Usando `theme`, poné la leyenda abajo y modificá el tamaño del título de la leyenda y el texto de la misma a tamaño 6. Adicionalmente reducí el tamaño de la caja `key` a 0.3 cm.
 
-```{r}
+```{r, fig.cap="Esperanza de vida por Continente + observaciones individuales"}
 (
   Grafico2Parte2 <- Grafico2Parte1 + 
-    geom_point(aes(color = continent), size = 2, alpha = 0.3) +
+    geom_point(
+      aes(color = continent), 
+      size = 2, 
+      alpha = 0.3,
+      position = position_jitter(w = 0.2, h = 0)
+      ) +
     scale_color_discrete(name = "Continente") +
     theme(
       legend.position = "bottom",
@@ -177,24 +183,31 @@ Replicá el siguiente gráfico donde la linea vertical es `word_avg` los puntos 
 
 ```{r}
 
-(
+( #Esperanza de vida al nacer a nivel mundial
   world_avg <- gapminder %>% summarise(world_avg = mean(lifeExp))
 )
 
-(
-continent_avg <- gapminder %>% group_by(continent) %>% summarise(continent_avg = mean(lifeExp)) %>% arrange(continent_avg)
+( #Esperanza de vida al nacer por continente, ordenadas de menos a más
+  continent_avg <- gapminder %>% group_by(continent) %>% summarise(continent_avg = mean(lifeExp)) %>% arrange(continent_avg)
 )
 ```
 
-```{r}
-gapminder %>% ggplot(aes(x = lifeExp, y = fct_reorder(continent, lifeExp, median))) +
+```{r, fig.cap="Distribucion de la esperanza de vida al nacer por continente"}
+gapminder %>% 
+  ggplot(
+    aes( x = lifeExp, y = fct_reorder(continent, lifeExp, median) )
+    ) +
   stat_summary(fun = mean, geom = "point", size = 2, alpha = 0.6) +
-  ggtitle( label = "Esperanza de vida promedio por continente") +
   scale_x_continuous(name = "Esperanza de vida al nacer en años") +
   scale_y_discrete(name = "Continentes") +
-  geom_point(aes(color = continent), alpha = 0.2, size = 2, position = position_jitter(w = 0, h = 0.2)) +
+  geom_point(
+    aes(color = continent), 
+    alpha = 0.2, 
+    size = 2, 
+    position = position_jitter(w = 0, h = 0.2)
+    ) +
   scale_color_brewer (name = "Continentes", palette = "Dark2") +
-  geom_vline(aes(xintercept = world_avg), data = world_avg) +
+  geom_vline(data = world_avg, aes(xintercept = world_avg)) +
   geom_segment(data = continent_avg, aes(x=continent_avg, y=continent, xend=world_avg$world_avg, yend=continent))
 
 ```
@@ -213,7 +226,7 @@ glimpse(gapminder_2007)
 ```
 
 
-```{r}
+```{r, fig.cap="PIB per Capita de los paises en 2007"}
 gapminder_2007 %>% ggplot(aes(y=lifeExp, x= gdpPercap, label = country)) + 
   geom_point(
     aes(color = (gdpPercap > 5000 & lifeExp < 60)), 
@@ -227,7 +240,6 @@ gapminder_2007 %>% ggplot(aes(y=lifeExp, x= gdpPercap, label = country)) +
     color = "red",
     data = subset(gapminder_2007, gdpPercap > 5000 & lifeExp < 60)
   ) +
-  ggtitle(label = "PIB per Capita de los paises en 2007") +
   scale_x_continuous(name="PBI per cápita") +
   scale_y_continuous(name="Esperanza de vida al nacer en años") +
   theme(legend.position = "none")
@@ -238,7 +250,7 @@ gapminder_2007 %>% ggplot(aes(y=lifeExp, x= gdpPercap, label = country)) +
 6. Hacer un gráfico de lineas que tenga en el eje `x` `year` y en el eje `y`  `gdpPercap` para cada continente en una misma ventana gráfica. En cada continente, el gráfico debe contener una linea para cada país a lo largo del tiempo (serie de tiempo de `gdpPercap`). Las etiquetas de los ejes deben ser claras y describir las variables involucradas. Incluir un `caption` en la figura con algún comentario de interés que describa el gráfico.
 
 ```{r}
-summary(gapminder[,"year"])
+summary(gapminder[,"year"]) #Los datos van desde 1952 hasta 2007
 
 (
   continent_data <- gapminder %>%
@@ -248,17 +260,18 @@ summary(gapminder[,"year"])
 ```
 
 
-```{r}
+```{r, fig.cap= "Variacion del PIB per Capita desde 1952 hasta 2007"}
 ggplot(continent_data, aes(x = year, y = gdpPercap, color = country)) +
   geom_line() +
   facet_wrap(~continent, ncol = 3) +
-  ggtitle(label = "Variacion del PIB per Capita desde 1952 hasta 2007") +
   scale_x_continuous(name = "Año") +
   scale_y_log10(
     name = "PBI per cápita", 
     labels = scales::number_format(big.mark = ",")
   ) +
-  labs(caption = "Fuente: Gapminder") +
+  labs(caption = 
+         "En Europa el PIB creció de forma bastante uniforme y exponencial. En Africa y Asia los PIB son muy dispares entre paises "
+       ) +
   theme(legend.position = "none")
 
 ```
