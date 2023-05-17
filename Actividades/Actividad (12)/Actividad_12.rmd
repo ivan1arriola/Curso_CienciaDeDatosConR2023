@@ -1,0 +1,125 @@
+---
+title: "Actividad 12"
+author: "Iván Arriola"
+date: "2023-05-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Paso 1: Leemos los datos
+
+```{r}
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+
+personas_ola_3 <- readr::read_csv("./Datos/Personas_OLA_3.csv")
+
+```
+# Seleccionar columnas
+```{r}
+
+personas_select <- personas_ola_3 %>% select(nform, nper, f12, f11, f2, f10, f4,
+                                 g1, g4, g5 ,h3, h7, h8,
+                                 h9a, h10 )
+```
+
+# Renombrar variables
+```{r}
+(personas_rename <- personas_select %>% rename(
+  sit.conyugal = f2 ,
+  nivel.educ= f4,
+  parent.jefe= f10,
+  edad= f11,
+  sexo= f12,
+  dedicacion.p= g1,
+  tipo.p= g4,
+  tareas.p= g5,
+  jub.pen= h3,
+  transf.pais= h7,
+  transf.ext= h8,
+  afam= h9a,
+  benef.esp= h10
+))
+```
+# Recodificar dedicacion.p 
+```{r}
+(
+  personas_recode <- personas_rename %>% mutate( 
+    dedicacion.p = case_match( 
+      dedicacion.p ,
+    1 ~ "trabaja",
+    2 ~ "desocupado",
+    3 ~ "estudia",
+    4 ~ "jubilado",
+    5 ~ "pensionista",
+    6 ~ "t.hogar",
+    7 ~ "nada"
+  )) 
+)
+```
+# 5. Realizar un gráfico de barras de la variable dedicacion.p en del objeto personas_recode ordenado por frecuencia filtrando la categoría NA. Agregando nombre apropiados en los ejes
+
+```{r, fig.cap= "Distribucion de la dedicacion"}
+personas_recode %>% 
+  filter(!is.na(dedicacion.p)) %>% 
+  ggplot(
+    aes( forcats::fct_infreq( dedicacion.p),
+         fill = dedicacion.p
+         )
+    ) +
+  geom_bar() +
+  scale_x_discrete(name="Dedicacion") +
+  scale_y_continuous(name = "Cantidad") +
+  scale_fill_brewer(palette = "Dark2") +
+  theme(
+    legend.position = "none"
+  )
+
+```
+# 6. ¿Cómo podemos ver la distribución de las edades de los que no hacen nada?
+
+```{r}
+personas_recode %>% 
+  filter(dedicacion.p=="nada") %>% 
+  ggplot(aes(edad)) +
+  geom_histogram(color="white") +
+  scale_x_continuous(name = "Edad") +
+  scale_y_continuous(name= "Cantidad")
+  
+```
+# Recodificá edad en tramos [0-3), [3, 6), [6,12), [12, 15), [15, 18) , [18,21), [21,30) y [30,+) guardalo en personas_recode_ed e identificá en que tramo se da la mayor frecuencia
+
+```{r}
+(
+  personas_recode_ed <- personas_recode %>% mutate( 
+    edad = case_match( 
+      edad ,
+      0:2 ~"[0-3)", 
+      3:5~"[3, 6)",
+      6:11~"[6,12)",
+      12:14~"[12, 15)",
+      15:17~"[15, 18)" ,
+      18:20~"[18,21)", 
+      21:29~"[21,30)", 
+      30:998 ~ "[30,+)"
+    )
+  ) 
+)
+
+personas_recode_ed %>% 
+  filter(dedicacion.p=="nada") %>% 
+  ggplot(
+  aes(edad)
+) +
+  geom_bar() +
+  scale_x_discrete(name="Edad") +
+  scale_y_continuous(name = "Cantidad") 
+  
+```
+
+#
+

@@ -1,0 +1,88 @@
+,,,,
+,Nombre en la base,Variable,Niveles ,Descripción
+,nform,Número de formulario,Número de hogar,ID del hogar
+,nper,Número de persona,Número de persona,Nper en la grilla del formulario
+,sit.conyugal,situación conyugal,1,Soltero/a
+,,,2,Unido/a
+,,,3,Casado/a
+,,,4,Sep/Divor
+,,,5,Viudo/a
+,,,9,NS/NC
+,,,.,Missing/No corresponde
+,nivel.educ,Nivel educativo que cursa o cursó,1,Preescolar
+,,,2,Primaria
+,,,3,Primaria esp.
+,,,4,Secundaria
+,,,5,Ens. técnica
+,,,6,Policial
+,,,7,Magist./IPA
+,,,8,Militar 
+,,,9,Terciaria (no univ.)
+,,,10,Universidad
+,,,99,NS/NC
+,,,.,Missing/No corresponde
+,parent.jefe,relacion de parentezco con el jefe,1,Jefe
+,,,2,Cónyuge
+,,,3,Hijo/a de ambos
+,,,4,Hijo/a solo del jefe
+,,,5,Hijo/a sólo  del cónyuge
+,,,6,Yerno/nuera
+,,,7,Nieto/a
+,,,8,Madre/padre
+,,,9,Suegro/a
+,,,10,Hermano/a
+,,,11,Cuñado/a
+,,,12,Otros familiares
+,,,13,No familiares
+,,,14,S. doméstico (c/cama)
+,,,99,NS/NC
+,,,.,Missing/No corresponde
+,edad,edad,anios cumplidos,
+,,,99,NS/NC
+,sexo,sexo,1,Hombre
+,,,2,Mujer
+,,,9,NS/NC
+,dedicacion.p,dedicación principal,1,Trabaja 
+,,,2,Está desocupado
+,,,3,Estudia
+,,,4,Está jubilado
+,,,5,Es pensionista 
+,,,6,Se encarga de las tareas del hogar
+,,,7,No hace nada  
+,,,99,NS/NC
+,,,.,Missing/No corresponde
+,tipo.p,en la ocupación principal es,1,Asalariado público
+,,,2,Asalariado privado
+,,,3,Cooperativa
+,,,4,Patrón
+,,,5,Cuenta propia c/local
+,,,6,Cuenta propia s/local
+,,,7,Trabajador no remunerado
+,,,9,NS/NC
+,,,.,Missing/No corresponde
+,tareas.p,Tareas que realiza en la ocupación principal,1,"Miem. P.ejecut, legisl, adm. pública"
+,,,2,"Profesionales, cientific. e intelect."
+,,,3,Técnico y profesion. de nivel medio
+,,,4,Empleado de oficina
+,,,5,Trabaj. de servic. y vendedores
+,,,6,"Agricultores, trab. calif. agropec."
+,,,7,Operarios y art. de artes mecanicas
+,,,8,Operadores de instalaciones y maquinas
+,,,9,Trabaj. no calificados
+,,,10,Fuerzas armadas
+,,,99,NS/NC
+,,,.,Missing/No corresponde
+,jub.pen,Jubilaciones y pensiones,Monto,
+,,,999999,NS/NC
+,transf.pais,Transferencias de otros hogares del país,Monto,
+,,,999999,NS/NC
+,transf.ext,Transferencias de hogares del extranjero,Monto,
+,,,999999,NS/NC
+,afam,Monto de asignación familiar,Monto,
+,,,999999,NS/NC
+,benef.esp,Beneficios en especia,Monto,
+,,,999999,NS/NC
+,ola,Ola,1,Ola 1
+,,,2,Ola 2
+,,,3,Ola 3
+,dpto_cod,Departamento,departamento,
