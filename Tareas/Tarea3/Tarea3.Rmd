@@ -460,6 +460,19 @@ datos_banco4 %>%
     Para obtener mas información, puede buscar el indicador por su código (*NY.GDP.PCAP.PP.KD*) dentro del catalogo de datos del Banco Mundial.
     
     La variable es PBI per capita
+    
+```{r}
+datos_banco5 %>% dplyr::filter(country_code == "URY") %>% 
+  ggplot2::ggplot() +
+  ggplot2::geom_point(
+    ggplot2::aes(
+      x = as.Date(Año, format("%Y")),
+      y = value
+    )
+  ) +
+  ggplot2::scale_x_date()
+```
+    
 
 \newpage
 
