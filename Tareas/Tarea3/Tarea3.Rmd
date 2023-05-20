@@ -94,13 +94,13 @@ clean_names <- function(df) {
     **Nota**: El primer archivo es un archivo Excel, por algún error de la página no muestra el logo correspondiente.
 
 ```{r}
-vacunacion_data <- readr::read_csv2("./actos_vacunales.csv")
+vacunacion_data <- readr::read_csv2("./Datos/actos_vacunales.csv")
 vacunacion_data <- clean_names(vacunacion_data)
 
 dplyr::glimpse(vacunacion_data)
 ```
 
-2. Resuma el archivo descargado (incluyendo **TODAS** las variables) agregando por:
+# 2. Resuma el archivo descargado (incluyendo **TODAS** las variables) agregando por:
 
 (Transformar el resumen por dia a uno por mes y por anio)
 (usar lubridate)
@@ -116,7 +116,7 @@ dplyr::glimpse(vacunacion_data)
 
 ```{r Crear variables Anio y AnioMes}
 vacunacion_data <- vacunacion_data %>% dplyr::mutate(
-  FechaDate = lubridate::dmy(Fecha),
+  FechaDate = lubridate::dmy(fecha),
   Anio = lubridate::year(FechaDate),
   AnioMes = Anio *100 + lubridate::month(FechaDate)
 ) %>% dplyr::select(Anio,AnioMes , everything())
@@ -124,27 +124,33 @@ vacunacion_data <- vacunacion_data %>% dplyr::mutate(
 
 ```{r}
 # Promedio diario por anio
+(
+  vacunacion_data_porAnio <-
 vacunacion_data %>% 
   dplyr::group_by(Anio) %>% 
-  dplyr::summarise_if(is.numeric, sum) #tengo que sumar todo lo del anio
+  dplyr::summarise_if(is.numeric, sum)
+)
 
 # Promedio diario por mes y anio
+(
+  vacunacion_data_porAnioMes <-
 vacunacion_data %>% 
   dplyr::group_by(AnioMes) %>% 
-  dplyr::summarise_if(is.numeric, sum) # y todo lo del mes anio
+  dplyr::summarise_if(is.numeric, sum)
+)
 
 ```
+En el promedio se pierde las variables FechaDate y Fecha
 
 
-
-3. Seleccione solo las columnas referidas al total de dosis por laboratorio.
+# 3. Seleccione solo las columnas referidas al total de dosis por laboratorio.
 
     Descarte el total de dosis general, por departamento y rango etario. **No seleccione las columnas por extensión**, intente
     encontrar un patrón que le permita elegir las columnas de interés de forma resumida.
     
 ```{r}
 (
-  vacunasPorLaboratorio_data <- vacunacion_data %>% select(ends_with('Sinovac'), ends_with('Pfizer'), ends_with('Astrazeneca'))
+  vacunasPorLaboratorio_data <- vacunacion_data %>% dplyr::select(FechaDate, ends_with('Sinovac'), ends_with('Pfizer'), ends_with('Astrazeneca'))
  )
 ```
     
@@ -152,14 +158,44 @@ vacunacion_data %>%
 4. Obtenga el total de cada columna seleccionada.
 
 ```{r}
-(
-  vacunasPorLaboratorio_data %>% summarise_all(sum)
+( vacunasPorLaboratorio <-
+  vacunasPorLaboratorio_data %>% dplyr::summarise_if(is.numeric,sum) # se pierde las fechas pero esta bien porque son totales absolutos
 )
 
 ```
 
 
 5. En el formato actual, ¿es posible operar de forma ordenada?. En caso negativo realice las transformaciones correspondientes.
+
+No esta ordenada porque tenemos dos variables por columna ( numero de dosis y laboratorio de la vacuna) y por lo tanto, cada fila corresponde a 3 observaciones en vez de una
+```{r}
+(
+  totales_vacunas <- vacunasPorLaboratorio %>%
+  tidyr::pivot_longer(cols = everything(), names_to = "acto", values_to = "cantidad") %>% 
+   dplyr::mutate(
+    dosis = factor(
+      as.numeric(
+        gsub(
+          "([0-9]+).*$", 
+          "\\1", 
+          acto
+        )
+      ),
+      ordered = TRUE
+    ),
+    laboratorio = sapply(
+      X = acto,
+      FUN = function(x) {
+        strsplit(
+            x,
+            split = "_"
+          )[[1]][3]
+      }
+    )
+  )
+)
+```
+
 
 6. Explique e incluya a la transformación de sus datos el siguiente chunk:
 
@@ -194,11 +230,64 @@ dplyr::mutate(
 
 7. Replique los siguientes gráficos e interprete brevemente.
 
+```{r, fig.cap="Gráfico de barras apiladas al 100%. Cantidad de vacunados por dosís y laboratorio"}
+totales_vacunas %>% 
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = dosis,
+      y = cantidad,
+      fill = laboratorio == "pfizer"
+    )
+  ) +
+  ggplot2::geom_col(
+    position = "fill"
+  ) +
+  ggplot2::scale_x_discrete(
+    name = "Dosis N°"
+  ) +
+  ggplot2::scale_y_continuous(
+    name = "Porcentaje",
+    labels = scales::percent
+  ) +
+  ggplot2::scale_fill_discrete(
+    name = "Laboratorio",
+    labels = c("Sinovac + Astrazeneca", "Pfizer")
+  ) +
+  ggplot2::theme(
+    legend.position="bottom"
+  )
 
-![Gráfico de barras apiladas al 100%. Cantidad de vacunados por dosís y laboratorio](barras_apiladas.png)
 
 
-![Gráfico de barras. Cantidad de vacunados por dosís y laboratorio](barras_dodge.png)
+```
+
+```{r, fig.cap="Gráfico de barras. Cantidad de vacunados por dosís y laboratorio"}
+totales_vacunas %>% 
+  ggplot2::ggplot(
+    ggplot2::aes(
+      x = dosis,
+      y = cantidad,
+      fill = laboratorio == "pfizer"
+    )
+  ) +
+  ggplot2::geom_col(
+    position = "dodge"
+  ) +
+  ggplot2::scale_x_discrete(
+    name = "Dosis N°"
+  ) +
+  ggplot2::scale_y_continuous(
+    name = "Cantidad de Vacunados"
+  ) +
+  ggplot2::scale_fill_discrete(
+    name = "Laboratorio",
+    labels = c("Sinovac + Astrazeneca", "Pfizer")
+  ) +
+  ggplot2::theme(
+    legend.position="bottom"
+  )
+
+```
 
 
 \newpage
@@ -218,7 +307,7 @@ dplyr::mutate(
 1. Ejecute el siguiente código y explique brevemente que se realiza en cada chunk.
 
 
-```{r,echo = TRUE,eval = FALSE,include = TRUE}
+```{r,echo = TRUE,eval = TRUE,include = TRUE}
 
 library(here)
 
@@ -280,23 +369,87 @@ if (!file.exists(query$destfile)) {
   - **Indicator Code**
 
   - **Años (desde 1960 a 2021)**
+  
+```{r}
+datos_banco <- readxl::read_excel("NY.GDP.PCAP.PP.KD.xls", col_names = TRUE,
+    sheet = "Data", range = readxl::cell_limits(c(4, NA), c(NA, 66)))
+```
+
 
 3. Con lo aprendido en la Tarea 1 y en el curso, renombre de forma programática los nombres de las columnas obteniendo el siguiente resultado (solo se muestran los primeros valores):
 
 **Pista**: Debe remplazar los espacios por un guión bajo y convertir el texto a minúsculas.
 
+```{r}
+datos_banco2 <- clean_names(datos_banco)
+```
+
+
 
 4. Explique brevemente por que los datos no cumplen con el concepto de `tidydata` visto en el curso.
 
+Porque cada fila no corresponde con una sola observacion, sino que cada fila corresponde a todas las observaciones de un mismo pais (que son mas de una)
+
 5. Transforme de forma conveniente el objeto para poder manipularlo de forma ordenada.
+
+```{r}
+(
+  datos_banco3 <- datos_banco2 %>%
+    tidyr::pivot_longer (
+      cols = 5:66,
+      names_to = "Año"
+    )
+)
+```
+
 
 6. Filtre la información solo para **Argentina**, **Chile**, **Paraguay** y **Uruguay**.
 
+```{r}
+(
+  datos_banco4 <- datos_banco3 %>% 
+    dplyr::filter(
+      country_code %in% c("ARG","CHL", "PRY", "URY")
+  )
+)
+```
 
 7. Remplace los valores faltantes siguiendo la siguiente lógica:
 
     - Si la variable es del tipo númerico remplace con valor mas cercano por país y cree una nueva variable indicadora que valga 1 si el dato fue imputado.
     - En caso contrario remplazar con el string **SIN_DATO**
+
+```{r}
+reemplazarNAconNext <- function(values) {
+  indices_na <- which(is.na(values))
+  
+  for (i in indices_na) {
+    siguiente_indice_no_na <- min(which(!is.na(values[(i+1):length(values)]))) + i
+    values[i] <- values[siguiente_indice_no_na]
+  }
+  
+  return(values)
+}
+
+
+(
+  datos_banco5 <-
+datos_banco4 %>% 
+  dplyr::group_by(country_code) %>% 
+  dplyr::mutate(
+    country_name = ifelse(is.na(country_name), "SIN_DATO", country_name ),
+    country_code = ifelse(is.na(country_code), "SIN_DATO", country_code ),
+    indicator_name = ifelse(is.na(indicator_name), "SIN_DATO", indicator_name ),
+    indicator_code = ifelse(is.na(indicator_code), "SIN_DATO", indicator_code ),
+    Año = ifelse(is.na(Año), "SIN_DATO", Año ),
+    
+    valor_imputado = ifelse(is.na(value), 1, 0 ),
+    value = reemplazarNAconNext(value)
+  ) %>% 
+  dplyr::ungroup()
+)
+
+```
 
 
 
@@ -305,6 +458,8 @@ if (!file.exists(query$destfile)) {
     Al crear el gráfico recuerde que el mismo debe ser autocontenido, es decir debe incluir un titulo (utilizando fig.cap), etiquetas adecuadas en los ejes y una proporción acorde al tipo de gráfico.
     
     Para obtener mas información, puede buscar el indicador por su código (*NY.GDP.PCAP.PP.KD*) dentro del catalogo de datos del Banco Mundial.
+    
+    La variable es PBI per capita
 
 \newpage
 
