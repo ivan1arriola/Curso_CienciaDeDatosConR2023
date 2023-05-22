@@ -155,7 +155,7 @@ En el promedio se pierde las variables FechaDate y Fecha
 ```
     
 
-4. Obtenga el total de cada columna seleccionada.
+# 4. Obtenga el total de cada columna seleccionada.
 
 ```{r}
 ( vacunasPorLaboratorio <-
@@ -165,7 +165,7 @@ En el promedio se pierde las variables FechaDate y Fecha
 ```
 
 
-5. En el formato actual, ¿es posible operar de forma ordenada?. En caso negativo realice las transformaciones correspondientes.
+# 5. En el formato actual, ¿es posible operar de forma ordenada?. En caso negativo realice las transformaciones correspondientes.
 
 No esta ordenada porque tenemos dos variables por columna ( numero de dosis y laboratorio de la vacuna) y por lo tanto, cada fila corresponde a 3 observaciones en vez de una
 ```{r}
@@ -197,7 +197,7 @@ No esta ordenada porque tenemos dos variables por columna ( numero de dosis y la
 ```
 
 
-6. Explique e incluya a la transformación de sus datos el siguiente chunk:
+# 6. Explique e incluya a la transformación de sus datos el siguiente chunk:
 
 ```{r,eval = FALSE,include = TRUE,echo = TRUE}
 dplyr::mutate(
@@ -225,10 +225,16 @@ dplyr::mutate(
 ```
 
   Donde acto es una columna con los strings "**1era_dosis_sinovac**", "**2da_dosis_pfizer**", etc.
+  
+  Con dplyr::mutate se crea dos variables: dosis y laboratorio.
+  Para "dosis" se agarra el String de la variable acto y saca la primera secuencia de numeros dentro del String:
+  Luego lo convierte en tipo numerico con as.numeric
+  Los numeros se convierten en factores y se les indica que son ordenados con el parametro ordered que se le asigna TRUE.
+  Para "laboratorio" se aplica una funcion a toda la columna de acto. La funcion saca del String de acto el nombre del laboratorio. Para eso usa la funcion strsplit que divide el string en partes utilizando el carácter "_" como separador. Luego, se accede al tercer elemento de la lista resultante, que corresponde al nombre del laboratorio, y se asigna a la variable "laboratorio".
 
 
 
-7. Replique los siguientes gráficos e interprete brevemente.
+# 7. Replique los siguientes gráficos e interprete brevemente.
 
 ```{r, fig.cap="Gráfico de barras apiladas al 100%. Cantidad de vacunados por dosís y laboratorio"}
 totales_vacunas %>% 
@@ -257,9 +263,10 @@ totales_vacunas %>%
     legend.position="bottom"
   )
 
-
-
 ```
+
+Se puede ver que la vacuna preferida para las primeras dosis fueron Sinovac + Astrazeneca , pero luego para las sigueintes se prefirió Pfizer
+
 
 ```{r, fig.cap="Gráfico de barras. Cantidad de vacunados por dosís y laboratorio"}
 totales_vacunas %>% 
@@ -289,11 +296,14 @@ totales_vacunas %>%
 
 ```
 
+Lo mismo que en el anterior grafico, aparte de que se puede ver como se abandonó el uso de las vacunas de otros laboratorios que no fueran Pfizer para la 3ra y 4ta dosis
 
 \newpage
 
 
-8. Investigue el gráfico de Mosaico. Explique por qué podemos resumir los dos gráficos anteriores utilizando este tipo de visualización. 
+# 8. Investigue el gráfico de Mosaico. Explique por qué podemos resumir los dos gráficos anteriores utilizando este tipo de visualización. 
+
+Con un grafico de mosaico se puede visualizar en un eje las proporciones , como en el primer grafico y en el otro eje las cantidades absolutas como en el segundo grafico
 
 
 \newpage
@@ -304,7 +314,7 @@ totales_vacunas %>%
 
 ## Parte 1: Producto Bruto Interno
 
-1. Ejecute el siguiente código y explique brevemente que se realiza en cada chunk.
+### 1. Ejecute el siguiente código y explique brevemente que se realiza en cada chunk.
 
 
 ```{r,echo = TRUE,eval = TRUE,include = TRUE}
@@ -315,6 +325,7 @@ dir <- here()
 
 ```
 
+Carga la libreria here y asigna a "dir" la direccion de la raiz del repositorio
 
 ```{r,echo = TRUE,eval = TRUE,include = TRUE}
 
@@ -345,11 +356,13 @@ if (!file.exists(query$destfile)) {
   )
 
 }
-
-
 ```
 
-2. Con ayuda de las liberías vistas en el curso para leer archivos de Excel, lea el archivo descargado anteriormente.
+asigna a "indicador" un String que contiene un codigo
+crea una lista llamada "query" que contiene el codigo, la url a la que se va a hacer la peticion, el destino del archivo a descargar que se obtiene usando here, y el metodo usado para la descarga
+Si no existe previamente un archivo con el mismo nombre y ruta que el que se quiere descargar, se ejecuta la funcion download.file con la lista query para descargar el archivo 
+
+### 2. Con ayuda de las liberías vistas en el curso para leer archivos de Excel, lea el archivo descargado anteriormente.
 
     **Pistas**:
 
@@ -459,18 +472,30 @@ datos_banco4 %>%
     
     Para obtener mas información, puede buscar el indicador por su código (*NY.GDP.PCAP.PP.KD*) dentro del catalogo de datos del Banco Mundial.
     
-    La variable es PBI per capita
+    La variable es PBI per capita es la suma de todos los bienes y servicios finales producidos por un país en un año, dividido por la población estimada para mediados del mismo año.
+    Como afecto la crisis sanitaria del 2020 a los cuatro paises de datos_banco5
+    En el grafico se puede observar un decrecimiento del PIB de 2019 a 2020 en los 4 paises
+    pero se ve que en los 4 paises ya habia un deteriodo del PIB previo a la pandemia, la cual solo 
+    hizo que se asentuara.
     
-```{r}
-datos_banco5 %>% dplyr::filter(country_code == "URY") %>% 
+    
+```{r, fig.cap="Evolucion del PIB de Argentina, Chile, Uruguay y Paraguay durante 2000-2021 a PPA"}
+datos_banco5  %>%  dplyr::filter(Año > 2000) %>% 
   ggplot2::ggplot() +
-  ggplot2::geom_point(
+  ggplot2::geom_line(
     ggplot2::aes(
       x = as.Date(Año, format("%Y")),
-      y = value
+      y = value,
+      color = country_code
     )
   ) +
-  ggplot2::scale_x_date()
+  ggplot2::scale_x_date( name = "Año") +
+  ggplot2::scale_y_continuous(name = "PIB per Capita a PPA") +
+  ggplot2::scale_color_discrete(name = "Pais") +
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.title = element_text(size = 13)
+    )
 ```
     
 
