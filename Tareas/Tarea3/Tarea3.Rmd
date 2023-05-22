@@ -94,7 +94,8 @@ clean_names <- function(df) {
     **Nota**: El primer archivo es un archivo Excel, por algún error de la página no muestra el logo correspondiente.
 
 ```{r}
-vacunacion_data <- readr::read_csv2("./Datos/actos_vacunales.csv")
+library(here)
+vacunacion_data <- readr::read_csv2(here("Datos","actos_vacunales.csv"))
 vacunacion_data <- clean_names(vacunacion_data)
 
 dplyr::glimpse(vacunacion_data)
@@ -384,7 +385,7 @@ Si no existe previamente un archivo con el mismo nombre y ruta que el que se qui
   - **Años (desde 1960 a 2021)**
   
 ```{r}
-datos_banco <- readxl::read_excel("NY.GDP.PCAP.PP.KD.xls", col_names = TRUE,
+datos_banco <- readxl::read_excel(here("NY.GDP.PCAP.PP.KD.xls"), col_names = TRUE,
     sheet = "Data", range = readxl::cell_limits(c(4, NA), c(NA, 66)))
 ```
 
@@ -568,7 +569,7 @@ download_file <- function(query){
 
 ```{r}
 load_file <- function(filename, sheet_name, range) {
-  datos_banco <- readxl::read_excel(filename, col_names = TRUE,
+  datos_banco <- readxl::read_excel(here(filename), col_names = TRUE,
     sheet = sheet_name, range = range)
   return(datos_banco)
 }
