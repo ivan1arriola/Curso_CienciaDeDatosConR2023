@@ -1,6 +1,6 @@
 ---
 title: "Revisión 2023 "
-author: ""
+author: "Iván Arriola - 55366796"
 date: ""
 output: pdf_document
 ---
@@ -43,11 +43,11 @@ Recordar que para que tengas la última versión de tu repositorio debes hacer `
 
 **2.a)** (8 Puntos) En cada uno de los siguientes casos tenés que arreglar algún problema común cuando subdividimos `data.frame` 
 
-```{r,eval=FALSE}
-mtcars[mtcars$cyl = 8, ]
-mtcars[-1:5, ] # ayuda el - tiene que aparecer en tu propuesta de arreglo
-mtcars[mtcars$cyl <= 6]
-mtcars[mtcars$cyl == 4 | 2, ] # el 4 y el 2 tienen que aparecer en tu propuesta de arreglo
+```{r}
+mtcars[mtcars$cyl == 8, ]                   # mtcars[mtcars$cyl = 8, ]
+mtcars[-c(1:5), ]                           # mtcars[-1:5, ] # ayuda el - tiene que aparecer en tu propuesta de arreglo
+mtcars[mtcars$cyl <= 6 ,]                   # mtcars[mtcars$cyl <= 6]
+mtcars[mtcars$cyl == 4 | mtcars$cyl == 2, ] # el 4 y el 2 tienen que aparecer en tu propuesta de arreglo
 ```
 
 
@@ -55,13 +55,89 @@ mtcars[mtcars$cyl == 4 | 2, ] # el 4 y el 2 tienen que aparecer en tu propuesta 
 
 **2.b)** (5 Puntos) ¿Porqué `mtcars[1:30]` da un error? y ¿Cómo esto es distinto de ` mtcars[1:30, ]`?
 
+  Porque `mtcars` es una data frame de dos variables, porque el operador [] necesita de dos parametros, uno que indique filas y otro columnas deseadas. Cuando se ejecuta `mtcars[1:30]` , no se machean la cantidad de parametros necesarios con los pasados en el operador y eso da error. Sin embargo, cuando se ejecuta `mtcars[1:30, ]`, estamos dejando explicitamente el segundo parametro como indefinido, lo cual el operador [] interpreta como que queremos todas las columnas de `mtcars` y ahi estarian definidas las filas y columnas deseadas y todo el codigo se ejecuta de la manera deseada.
+
 
 **2.c)**  (10 Puntos) Usando un for loop recodificá los valores del siguiente vector `c(2, 8, 5, 7, 2, 3, 1, NA)` al que deberás llamar `v_orig` como 1 es 'Azul', 2 es 'Verde', 3 es 'Amarillo', 4 es 'Rojo', 5 es 'Violeta', NA es NA y el resto como 'Otro'. El vector resultantes  deberá  ser`c("Verde", "Otro", "Violeta", "Otro", "Verde", "Amarillo", "Azul", NA)` al que debes guardar en el objeto  `v_recod`
 
-Ahora incorporá lo anterior en un loop que sirva para cualquier vector numérico 
+```{r}
+v_ord <- c(2, 8, 5, 7, 2, 3, 1, NA)
+v_recod <- c()
+for (v in v_ord) {
+  if(is.na(v)) {
+    v_recod <- c(v_recod, NA)
+  } else if(v == 1) {
+    v_recod <- c(v_recod, "Azul")
+  } else if(v == 2) {
+    v_recod <- c(v_recod, "Verde")
+  } else if(v == 3) {
+    v_recod <- c(v_recod, "Amarillo")
+  }else if(v == 4) {
+    v_recod <- c(v_recod, "Rojo")
+  }else if(v == 5) {
+    v_recod <- c(v_recod, "Violeta")
+  } else{
+    v_recod <- c(v_recod, "Otro")
+  }
+}
+```
+
+
+Ahora incorporá lo anterior en una funcion que sirva para cualquier vector numérico 
 y si el vector no es numérico que frene e indique un error con sentido.
 
+```{r}
+f_recod <- function(vector){
+  if(!is.numeric(vector)) {
+    stop('Esta función necesita valores numéricos y me diste un objeto de la clase: ', class(v)[1])
+  }
+  vector_recod <- c()
+  for (v in vector) {
+    if(is.na(v)) {
+      vector_recod <- c(vector_recod, NA)
+    } else if(v == 1) {
+      vector_recod <- c(vector_recod, "Azul")
+    } else if(v == 2) {
+      vector_recod <- c(vector_recod, "Verde")
+    } else if(v == 3) {
+      vector_recod <- c(vector_recod, "Amarillo")
+    }else if(v == 4) {
+      vector_recod <- c(vector_recod, "Rojo")
+    }else if(v == 5) {
+      vector_recod <- c(vector_recod, "Violeta")
+    } else{
+      vector_recod <- c(vector_recod, "Otro")
+    }
+  }
+  return(vector_recod)
+}
+```
+
+
+
 **2.d)**  (7 Puntos) Implementá una función que extraiga la diagonal principal de una matriz. Debes comprobar que se comporta como la función `diag(x)`, donde `x` es una matriz.
+
+```{r}
+diagonalPrincipal <- function(m) {
+  coordMin <- min(dim(m))
+  diagonal <- c()
+  for (i in 1:coordMin) {
+    diagonal <- c(diagonal, m[i, i])
+  }
+  return(diagonal)
+}
+```
+
+```{r}
+a <- sample(1:100, 3*3)
+b <- sample(1:100, 7*2)
+
+matrixA <- matrix(a, 3, 3)
+matrixB <- matrix(b, 7, 2)
+
+identical(diagonalPrincipal(matrixA), diag(matrixA))
+identical(diagonalPrincipal(matrixB), diag(matrixB))
+```
 
 
 **2.e)**  (5 Puntos) ¿Qué propiedad importante de `&&` hace  funcionar a `f1`?
@@ -71,6 +147,9 @@ f1 <- function(x) {
   !is.null(x) && length(x) == 1 && x > 0
 }
 ```
+
+
+
 ¿Qué es diferente con este código? Porqué este comportamiento no es deseable aquí?
 
 ```{r,eval=FALSE}
@@ -135,14 +214,47 @@ Trabajaremos solamente con las siguentes variables y sus nombres:
 - Monto asignación familiar: `afam`
 - Beneficio en especia: `benef.esp`
 
+```{r}
+library(here)
+library(magrittr)
+library(ggplot2)
+```
+
 
 **3.a)** (1 Punto) Usando la función `read_csv` del paquete `readr` cargá la base de datos `persona_recode_ed.csv` que se encuentra disponible en el EVA y a estos datos nombralos  `personas`. Usá la función  `read_csv()` y `here()` para asegurar la reproducibilidad.
+
+```{r}
+(personas <- readr::read_csv(here("Datos", "personas_recode_ed.csv")))
+```
 
 
 **3.b)**(5 Puntos) La variable `sexo` tiene tres valores, recodificala usando la función `case_when` para que el 1 sea `Hombre` el 2 sea `Mujer` y 9 sea `NS/NC` (no sabe). Guardá los nuevos datos en `personas_reco`. La nueva variable nombrala `sexo_reco`
 
+```{r}
+(
+  personas <- personas %>% 
+    dplyr::mutate(
+      sexo_reco = dplyr::case_when(
+        sexo == 1 ~ "Hombre",
+        sexo == 2 ~ "Mujer",
+        sexo == 9 ~ "NS/NC"
+      )
+    )
+)
+```
+
 
 **3.c)** (7 Puntos) Usando funciones de `dplyr` respondé ¿Cuál es la proporción de personas según `sexo_reco`?
+
+```{r}
+(
+  personas %>% dplyr::select(sexo_reco) %>% dplyr::group_by(sexo_reco) %>% 
+    dplyr::summarise(
+      prop = dplyr::n() / dplyr::n()
+    ) 
+)
+```
+
 
 
 Reportá una tabla (con `xtable`), La tabla debe contener tres columnas ( Sexo, Conteo y Proporción). Guardá el objeto generado con nombre `tabla`. Recordá poner en el chunk de código `results='asis'` y adentro del entorno `options(xtable.comment = FALSE)` para que salga la tabla en el pdf.
@@ -154,6 +266,18 @@ Tenemos está información en la **base de Hogares** y una variable de macheo qu
 Nos interesa mantener todas las observaciones de la base de personas, y "pegarle" el departamento, `a4` y `a4a`. 
 
 La base de hogares es `hogares_reco.csv` con alguna función de `dplyr` relacioná estas dos `data.frames` y al nuevo objeto nombralo `presonas_hogar`
+
+```{r}
+(hogares <- readr::read_csv(here("Datos", "hogares_reco.csv")))
+```
+
+```{r}
+(
+  personas_hogar <- hogares %>% dplyr::select(nform, dpto_cod, a4, a4a) %>%
+    dplyr::right_join(personas, by="nform")
+) 
+```
+
 
 
 **3.e)** (7 Puntos) Recodificá la variable `a4` (propiedad de la vivienda) de `personas_hogar` usando `case_match`  guardá los datos en el objeto  `personas_recode` como sigue
@@ -170,7 +294,42 @@ La base de hogares es `hogares_reco.csv` con alguna función de `dplyr` relacion
 - 10	`otro`
 - `ns/nc` "NA"
 
+```{r}
+(
+  personas_recode <- personas_hogar %>% 
+    dplyr::mutate(
+      a4 = dplyr::case_match(a4, 
+        "1" ~ "prop_vivter_pagando",
+        "2" ~ "prop_vivter",
+        "3" ~ "prop_viv_pagando",
+        "4" ~ "prop_viv",
+        "5"	~ "alquila",
+        "6" ~ "ocupa_dep",
+        "7" ~ "ocupa_gr",
+        "8" ~ "ocupa_noper",
+        "9" ~ "pension",
+        "10" ~ "otro",
+        "ns/nc" ~ NA,
+      )
+    )
+)
+```
+
+
 Usando `ggplot2` hacé un gráfico de barras con la distribución de dicha variable indicando la más frecuente y en caso que las etiquetas no se vean bien proponé alguna forma de mejorarlo visualmente.
+
+```{r}
+personas_recode %>% ggplot(
+  aes(forcats::fct_infreq(a4))
+) +
+  geom_bar() +
+  scale_y_continuous(name = "Cantidad") +
+  scale_x_discrete(name="Propiedad de la vivienda") +
+  theme(
+    axis.text.x = element_text( size = 5)
+  )
+```
+
 
 **3.f)** (10 Puntos) Mediante un gráfico describí como se distribuye la variable `a4a` por departamento en distintos paneles (4 columnas y dos filas), notá que deberá convertirla a numérica y no considerar los NA.
 
@@ -180,6 +339,25 @@ Usando `ggplot2` hacé un gráfico de barras con la distribución de dicha varia
 4. Cambiá la posición de la leyenda en la parte inferior del gráfico usando theme, el título del eje x e y de color darkgray y tamaño 12, el título y texto de la leyenda también de tamaño 12 y con color darkgray.
 5. Incluí un caption a tu figura y una descripción de lo que ves en ella, algo interesante que surja del gráfico.
 
+```{r}
+library(paletteer)
+personas_recode %>% dplyr::select(dpto_cod, a4a) %>% 
+  dplyr::filter(!is.na(a4a)) %>% dplyr::mutate(a4a=as.numeric(a4a)) %>% 
+  ggplot() + 
+  geom_boxplot(
+    aes(a4a,
+        color = dpto_cod),
+    
+  ) +
+  facet_wrap(~ dpto_cod, nrow = 2)  +
+  scale_x_continuous(name = "Monto del Alquiler") +
+  scale_colour_paletteer_d(palette == "") +
+  theme(
+    
+  )
+  
+```
+
 
 # Ejercicio 4 (Popurrí)
 ## (20 Puntos){-}
@@ -188,7 +366,7 @@ Usando `ggplot2` hacé un gráfico de barras con la distribución de dicha varia
  
 Seleccione una:
 
-a) Datos, mapeo estético y sistema de coordenadas
+**a) Datos, mapeo estético y sistema de coordenadas**
 
 b) Datos, mapeo estético y escalas
 
@@ -207,7 +385,7 @@ print(b)}
 }
 ```
 a. Calcula un número al cuadrado
-b. Calcula una secuencia de números al cuadrado
+**b. Calcula una secuencia de números al cuadrado**
 c. Calcula el producto de a por 2
 d. Calcula una secuencia de números al cuadrado para los valores positivos hasta a
 
@@ -215,3 +393,12 @@ d. Calcula una secuencia de números al cuadrado para los valores positivos hast
 
 **4.c)** (10 Puntos) Hacé una función  llamada `simulaplot` que tenga como argumentos `n` tamaño de muestra, `sigma` el desvio y `forma`. Esta función simula datos para distintos tamaños de muestra con distinta media y desvio de una distribución normal usando `rnorm` y simula la misma cantidad de observaciones n de una distribución con `rgamma` cambiando el parámetro de forma. Como resultado de esta función se hace un diagrama de dispersión (usando `ggplot2`) con `x` los datos simulados normales y en `y` los datos simulados de la gamma.
 A su vez si el argumento es `sigma` es negativo la función no debe ser evaluada y debe imprimir el mensaje "sigma debe ser negativo".
+
+```{r}
+simulaplot <- function(n, sigma, forma){
+  if(sigma<0) stop("sigma no debe ser negativo")
+  
+  
+}
+```
+
