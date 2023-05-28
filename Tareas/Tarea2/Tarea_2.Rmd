@@ -124,6 +124,14 @@ En base al gráfico anterior
 ```
 
 
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 1:}
+
+Te falto ordenar las barras, en clase vimos que esto era suuper importante!. En total tenes 42.5/47.5 puntos!.
+\end{minipage}}
+
 \newpage
 
 ## Ejercicio 2
@@ -278,6 +286,18 @@ ggplot(continent_data, aes(x = year, y = gdpPercap, color = country)) +
 
 
 
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 2:}
+
+¡Excelente!. En total tenes 47.5/47.5 puntos!.
+\end{minipage}}
 
 
+\fbox{\begin{minipage}{48em}
+
+\textbf{¡Buen trabajo!}
+
+Por reproducibilidad tenes 5 puntos más, ¡en total la nota de la tarea es 95/100!.
+\end{minipage}}
 
