@@ -351,7 +351,6 @@ personas_recode %>% dplyr::select(dpto_cod, a4a) %>%
   ) +
   facet_wrap(~ dpto_cod, nrow = 2)  +
   scale_x_continuous(name = "Monto del Alquiler") +
-  scale_colour_paletteer_d(palette == "") +
   theme(
     
   )
