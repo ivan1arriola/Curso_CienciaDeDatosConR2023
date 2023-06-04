@@ -1,0 +1,77 @@
+---
+title: "EjemploModelos"
+output: html_document
+date: "2023-05-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Modelos
+```{r}
+library(here)
+library(tidyverse)
+```
+
+```{r}
+# leo los datos
+adv <- read_csv( here('Datos/Advertising.csv'))
+# ajustamos modelo lineal simple
+m <- lm(Sales ~ TV, data= adv)
+
+```
+```{r}
+summary(m)
+```
+```{r}
+ggplot( ) + geom_point(aes(x=fitted(m), y=rstudent(m) )) +
+labs(title='Residuos vs Predicciones'
+,
+x=expression( hat(y[i])) , y = expression(e[i]/SE(e[i])) )
+
+
+```
+
+```{r}
+library(kableExtra)
+```
+
+
+```{r}
+# guardo el resumen del modelo en un objeto
+xx <- summary(m)
+# creamos hoja de datos (data.frame) con las medidas deseadas
+dd <- data.frame(R2 = xx$r.squared, sigma=xx$sigma, AIC=AIC(m))
+# muestro resultado
+kable(dd)
+```
+
+```{r}
+# ajustamos modelo con interaccion
+m2 <- lm(Sales ~ TV + Radio + Newspaper, data= adv)
+summary(m2)
+
+```
+
+```{r}
+ggplot( ) + geom_point(aes(x=fitted(m2), y=rstudent(m2) )) +
+labs(title='Residuos vs Predicciones'
+,
+x=expression( hat(y[i])) , y = expression(e[i]/SE(e[i])) )
+```
+
+```{r}
+ggplot(adv) +
+geom_point(aes(Radio, Sales, color = TV)) +
+scale_color_gradient2(midpoint = median(adv$TV)) +
+  theme(
+    aspect.ratio = 1
+  )
+
+```
+
+
+
+
+
