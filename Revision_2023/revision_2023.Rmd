@@ -38,6 +38,12 @@ Recordar que para que tengas la última versión de tu repositorio debes hacer `
 
 **1.f)** (2 Puntos) Presentá tu código de forma ordenada así como las respuestas a cada pregunta.
 
+
+\textcolor{violet}{TU REVISIÓN ES REPRODUCIBLE, TU REPOSITORIO ESTÁ ORDENADO Y TU CÓDIGO TAMBIÉN. }
+
+
+\textcolor{violet}{10 PUNTOS}
+
 # Ejercicio 2 (R Base)
 ## (35 Puntos){-}
 
@@ -50,13 +56,15 @@ mtcars[mtcars$cyl <= 6 ,]                   # mtcars[mtcars$cyl <= 6]
 mtcars[mtcars$cyl == 4 | mtcars$cyl == 2, ] # el 4 y el 2 tienen que aparecer en tu propuesta de arreglo
 ```
 
-
+\textcolor{violet}{8 PUNTOS}
 
 
 **2.b)** (5 Puntos) ¿Porqué `mtcars[1:30]` da un error? y ¿Cómo esto es distinto de ` mtcars[1:30, ]`?
 
   Porque `mtcars` es una data frame de dos variables, porque el operador [] necesita de dos parametros, uno que indique filas y otro columnas deseadas. Cuando se ejecuta `mtcars[1:30]` , no se machean la cantidad de parametros necesarios con los pasados en el operador y eso da error. Sin embargo, cuando se ejecuta `mtcars[1:30, ]`, estamos dejando explicitamente el segundo parametro como indefinido, lo cual el operador [] interpreta como que queremos todas las columnas de `mtcars` y ahi estarian definidas las filas y columnas deseadas y todo el codigo se ejecuta de la manera deseada.
 
+\textcolor{violet}{INCOMPLETA, VER SOLUCIÓN}
+\textcolor{violet}{3 PUNTOS}
 
 **2.c)**  (10 Puntos) Usando un for loop recodificá los valores del siguiente vector `c(2, 8, 5, 7, 2, 3, 1, NA)` al que deberás llamar `v_orig` como 1 es 'Azul', 2 es 'Verde', 3 es 'Amarillo', 4 es 'Rojo', 5 es 'Violeta', NA es NA y el resto como 'Otro'. El vector resultantes  deberá  ser`c("Verde", "Otro", "Violeta", "Otro", "Verde", "Amarillo", "Azul", NA)` al que debes guardar en el objeto  `v_recod`
 
@@ -114,6 +122,8 @@ f_recod <- function(vector){
 ```
 
 
+\textcolor{violet}{VER OTRA FORMA EN LA SOLUCIÓN. 10 PUNTOS}
+
 
 **2.d)**  (7 Puntos) Implementá una función que extraiga la diagonal principal de una matriz. Debes comprobar que se comporta como la función `diag(x)`, donde `x` es una matriz.
 
@@ -139,6 +149,10 @@ identical(diagonalPrincipal(matrixA), diag(matrixA))
 identical(diagonalPrincipal(matrixB), diag(matrixB))
 ```
 
+\textcolor{violet}{LA FUNCIÓN DEBERÍA TENER ALGÚN CUIDADO QUE x SEA UNA MATRIX AL MENOS}
+
+\textcolor{violet}{6 PUNTOS}
+
 
 **2.e)**  (5 Puntos) ¿Qué propiedad importante de `&&` hace  funcionar a `f1`?
 
@@ -158,6 +172,7 @@ f1 <- function(x) {
 }
 ```
 
+\textcolor{violet}{VER SOLUCIÓN. 0 PUNTO}
 
 # Ejercicio 3 (tidyverse)
 ## (35 Puntos){-}
@@ -227,6 +242,8 @@ library(ggplot2)
 (personas <- readr::read_csv(here("Datos", "personas_recode_ed.csv")))
 ```
 
+\textcolor{violet}{1 PUNTO}
+
 
 **3.b)**(5 Puntos) La variable `sexo` tiene tres valores, recodificala usando la función `case_when` para que el 1 sea `Hombre` el 2 sea `Mujer` y 9 sea `NS/NC` (no sabe). Guardá los nuevos datos en `personas_reco`. La nueva variable nombrala `sexo_reco`
 
@@ -243,6 +260,8 @@ library(ggplot2)
 )
 ```
 
+\textcolor{violet}{5 PUNTOS}
+
 
 **3.c)** (7 Puntos) Usando funciones de `dplyr` respondé ¿Cuál es la proporción de personas según `sexo_reco`?
 
@@ -258,6 +277,8 @@ library(ggplot2)
 
 
 Reportá una tabla (con `xtable`), La tabla debe contener tres columnas ( Sexo, Conteo y Proporción). Guardá el objeto generado con nombre `tabla`. Recordá poner en el chunk de código `results='asis'` y adentro del entorno `options(xtable.comment = FALSE)` para que salga la tabla en el pdf.
+
+\textcolor{violet}{FALTÓ CALCULAR LA PROPORCIÓN Y HACER LA TABLA. 3 PUNTOS}
 
 **3.d)** (5 Puntos) Nos gustaría tener la variable **departamento** que indica el departamento al cuál pertenece el hogar de la muestra así como la variable `a4` que indica propiedad de la vivienda y `a4a` que indica el monto del alquiler.
 
@@ -278,7 +299,7 @@ La base de hogares es `hogares_reco.csv` con alguna función de `dplyr` relacion
 ) 
 ```
 
-
+\textcolor{violet}{5 PUNTOS}
 
 **3.e)** (7 Puntos) Recodificá la variable `a4` (propiedad de la vivienda) de `personas_hogar` usando `case_match`  guardá los datos en el objeto  `personas_recode` como sigue
 
@@ -330,6 +351,7 @@ personas_recode %>% ggplot(
   )
 ```
 
+\textcolor{violet}{REDUCIR TANTO LA FUENTE NO ES LA MEJOR SOLUCIÓN PORQUE NO SE LEE NADA, AUNQUE INTENTA RESOLVER EL PROBLEMA, PODRÍAS ROTAR LOS EJES. 6 PUNTOS}
 
 **3.f)** (10 Puntos) Mediante un gráfico describí como se distribuye la variable `a4a` por departamento en distintos paneles (4 columnas y dos filas), notá que deberá convertirla a numérica y no considerar los NA.
 
@@ -356,7 +378,7 @@ personas_recode %>% dplyr::select(dpto_cod, a4a) %>%
   )
   
 ```
-
+\textcolor{violet}{EN ESTA VISUALIZACIÓN HUBIERA QUEDADO MEJOR PONER EL MONTO DE ALQUILER EN EL EJE X, FALTAN ALGUNOS DE LOS DETALLES DE LA FIGURA. 6 PUNTOS}
 
 # Ejercicio 4 (Popurrí)
 ## (20 Puntos){-}
@@ -373,7 +395,7 @@ c) Datos, mapeo estético y modelo estadístico
 
 d) Datos, mapeo estético y temas 
 
-
+\textcolor{violet}{0 PUNTO}
 
 **4.b)**(5 Puntos) Indica cuál de las opciones describe mejor lo que hace la función
 ```{r,eval=FALSE}
@@ -387,7 +409,7 @@ a. Calcula un número al cuadrado
 **b. Calcula una secuencia de números al cuadrado**
 c. Calcula el producto de a por 2
 d. Calcula una secuencia de números al cuadrado para los valores positivos hasta a
-
+\textcolor{violet}{0 PUNTO}
 
 
 **4.c)** (10 Puntos) Hacé una función  llamada `simulaplot` que tenga como argumentos `n` tamaño de muestra, `sigma` el desvio y `forma`. Esta función simula datos para distintos tamaños de muestra con distinta media y desvio de una distribución normal usando `rnorm` y simula la misma cantidad de observaciones n de una distribución con `rgamma` cambiando el parámetro de forma. Como resultado de esta función se hace un diagrama de dispersión (usando `ggplot2`) con `x` los datos simulados normales y en `y` los datos simulados de la gamma.
@@ -400,4 +422,10 @@ simulaplot <- function(n, sigma, forma){
   
 }
 ```
+\textcolor{violet}{2 PUNTOS}
+
+\textcolor{violet}{TOTAL DE PUNTOS 65/100}
+
+
+
 
