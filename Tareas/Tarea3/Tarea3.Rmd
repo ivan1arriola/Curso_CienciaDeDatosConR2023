@@ -166,6 +166,10 @@ En el promedio se pierde las variables FechaDate y Fecha
 ```
 
 
+\fbox{\begin{minipage}{48em}
+La función `summarise_if` esta deprecada, ahora podes usar `across` dentro de muchos de los verbos de dplyr!.
+\end{minipage}}
+
 # 5. En el formato actual, ¿es posible operar de forma ordenada?. En caso negativo realice las transformaciones correspondientes.
 
 No esta ordenada porque tenemos dos variables por columna ( numero de dosis y laboratorio de la vacuna) y por lo tanto, cada fila corresponde a 3 observaciones en vez de una
@@ -306,9 +310,19 @@ Lo mismo que en el anterior grafico, aparte de que se puede ver como se abandon�
 
 Con un grafico de mosaico se puede visualizar en un eje las proporciones , como en el primer grafico y en el otro eje las cantidades absolutas como en el segundo grafico
 
+\fbox{\begin{minipage}{48em}
+No. Ambos ejes son proporciones, pero podemos ver la interacción de ambos grupos.
+\end{minipage}}
 
 \newpage
 
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 1:}
+
+Sin mas comentarios. En total tenes 40.5/47.5 puntos!.
+\end{minipage}}
 
 # Ejercicio 2: Obteniendo datos del Banco Mundial como una experta
 
@@ -419,6 +433,11 @@ Porque cada fila no corresponde con una sola observacion, sino que cada fila cor
 ```
 
 
+
+\fbox{\begin{minipage}{48em}
+Se esperaba que seleccionaran las columnas de una mejor forma. Mira la solución, ya que una minina permutación en el órden de las columnas puede romperte el código.
+\end{minipage}}
+
 6. Filtre la información solo para **Argentina**, **Chile**, **Paraguay** y **Uruguay**.
 
 ```{r}
@@ -470,6 +489,10 @@ datos_banco4 %>%
 ```
 
 
+\fbox{\begin{minipage}{48em}
+Genial!. Buscá la función `fill` del paquete **tidyr** que hace lo mismo que tu función!.
+\end{minipage}}
+
 
 8. Defina brevemente la variable con la cual estamos trabajando, una pregunta de interés y un gráfico que intente responderla. Puede trabajar con los datos filtrados o con todos los datos disponibles.
 
@@ -503,6 +526,11 @@ datos_banco5  %>%  dplyr::filter(Año > 2000) %>%
     )
 ```
     
+
+\fbox{\begin{minipage}{48em}
+
+No uses símbolos o `~` en el nombre de las columnas!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\end{minipage}}
 
 \newpage
 
@@ -613,7 +641,7 @@ df %>%
     country_code = ifelse(is.na(country_code), "SIN_DATO", country_code ),
     indicator_name = ifelse(is.na(indicator_name), "SIN_DATO", indicator_name ),
     indicator_code = ifelse(is.na(indicator_code), "SIN_DATO", indicator_code ),
-    Año = ifelse(is.na(Año), "SIN_DATO", Año ),
+    `Anio` = ifelse(is.na(`Anio`), "SIN_DATO", Año ),
     
     valor_imputado = ifelse(is.na(value), 1, 0 ),
     value = reemplazarNA(value)
@@ -651,7 +679,7 @@ filter_country <- function(df, countries){
 
 
 Revise los argumentos sugeridos y reflexione sobre la inclusión o no de valores por defecto.
-```{r,echo = TRUE,eval = FALSE,include = TRUE}
+```{r,echo = TRUE,eval = TRUE,include = TRUE}
 
 tidy_wdi <- function(
   country = "all",
@@ -724,6 +752,23 @@ prueba <- tidy_wdi(indicador = indicador, sheet_name = "Data", range = readxl::c
 ```
 
 
+\fbox{\begin{minipage}{48em}
+Te faltó cambiar los argumentos por defecto. 
+\end{minipage}}
+
+
+## Probando tidy_wdi
+
+```{r}
+tidy_wdi(
+  country = "UY",
+  indicador = "SI.POV.GINI",
+  sheet_name = "Data"
+)
+
+# NO FUNCIONA! Te falto poner la función que limpie nombres y no poner JAMAS tildes o ñ!
+```
+
 
 \newpage
 
@@ -736,6 +781,22 @@ del `tidyverse`.
 
 **Pista**: En el caso de utilizar `purrr` revise la función `map_dfr` y en el caso de utilizar `apply` considere que la salida debe ser un data.frame.
 
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{Resumen ejercicio 2:}
+
+Te faltaron algunas cosas y algunas dejaste incompleto. Lee los comentarios que te fui dejando y mira la solución!. En total tenes 30/47.5
+\end{minipage}}
+
+
+
+\fbox{\begin{minipage}{48em}
+
+\textbf{¡Buen trabajo!}
+
+No pude reproducir el PDF por los nombres de las columnas, en total tenes 70.5/100!
+\end{minipage}}
 
 # ¡Felicitaciones!
 
