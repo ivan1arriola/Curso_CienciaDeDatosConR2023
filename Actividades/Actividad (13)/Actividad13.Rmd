@@ -1,0 +1,69 @@
+---
+title: "Actividad13"
+author: "Ivan Arriola"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Actividad 13
+
+```{r librerias}
+library(magrittr)
+```
+
+```{r variablesDeEntorno, eval=FALSE}
+usethis::edit_r_environ(
+  scope = "project"
+)
+```
+
+```{r coneccionALaBaseDeDatos}
+con <- DBI::dbConnect(
+  RPostgres::Postgres(),
+  host = Sys.getenv("DB_HOST"),
+  port = Sys.getenv("DB_PORT"),
+  user = Sys.getenv("DB_USER"),
+  password = Sys.getenv("DB_PASS"),
+  dbname = Sys.getenv("DB_NAME")
+)
+```
+
+# Ejercicio 1
+Averiguar que producto me tocó
+
+```{r}
+(
+  df <- DBI::dbGetQuery(
+    con,
+    " 
+    SELECT
+      *
+    FROM
+      arriola_iván.d_productos
+    "
+)
+)
+```
+
+```{r}
+DBI::dbGetQuery(con , 
+                "
+                SELECT
+                  dp.id_producto,
+                  AVG(precio),
+                  EXTRACT(year from fecha)*100 + EXTRACT(month from fecha) as year_mouth
+                FROM
+                  scraping_precios.fact_price as fct
+                INNER JOIN arriola_iván.d_productos dp ON dp.id_producto = fct.id_producto
+                GROUP BY 
+                  dp.id_producto,
+                  EXTRACT(year from fecha) * 100 + EXTRACT(month from fecha)
+                ")
+```
+
+
+
