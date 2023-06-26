@@ -7,8 +7,9 @@ fluidPage(
     sidebarPanel(
       selectInput('varcolor', 'Variable en color', 
                   c("sexo", "fuma", "dia", "momento") ),
-      actionButton("go", "Go"),
-      actionButton("reset", "Clear")
+      actionButton("go", "Graficar"),
+      actionButton("reset", "Limpiar"),
+     
     ),
     mainPanel(
       tabsetPanel(
