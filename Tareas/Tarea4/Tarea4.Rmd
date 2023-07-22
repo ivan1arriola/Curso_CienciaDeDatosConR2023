@@ -97,4 +97,11 @@ library(here)
 [Mi Aplicación](https://ivan1arriola.shinyapps.io/tarea4)
 
 
+\fbox{\begin{minipage}{48em}
+
+\textbf{¡Excelente trabajo!}
+
+En total tenes 100/100!.
+\end{minipage}}
+
 6. **EXTRA**: Si el deber te pareció muy fácil, podrías agregar un conditionalPanel que se muestre cuando apretas el botón de generar los gráficos y se oculte cuando apretas el botón de borrar las gráficas (los actionButton del punto 4). Dentro del conditionalPanel podes agregar un actionButton que muestre u oculte la tabla que generaste.
